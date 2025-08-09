@@ -1,20 +1,20 @@
 import 'package:equatable/equatable.dart';
 
-class Classroom extends Equatable {
+class ClassRoom extends Equatable {
   final String id;
   final String name;
   final int year;
   final int createdAt;
 
-  const Classroom({
+  const ClassRoom({
     required this.id,
     required this.name,
     required this.year,
     required this.createdAt,
   });
 
-  factory Classroom.fromMap(Map<dynamic, dynamic> m) {
-    return Classroom(
+  factory ClassRoom.fromMap(Map<dynamic, dynamic> m) {
+    return ClassRoom(
       id: m['id'] ?? '',
       name: m['name'] ?? '',
       year: m['year'] ?? 0,
