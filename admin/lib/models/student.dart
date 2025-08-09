@@ -28,6 +28,15 @@ class Student extends Equatable{
     );
   }
 
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'classId': classId,
+    'name': name,
+    'email': email,
+    'passwordHash': passwordHash,
+    'createdAt': createdAt,
+  };
+
   @override
   List<Object?> get props => [id, classId, name, email, passwordHash, createdAt];
 }
