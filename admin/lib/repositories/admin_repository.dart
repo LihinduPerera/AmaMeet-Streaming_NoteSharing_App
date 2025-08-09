@@ -71,11 +71,14 @@ class AdminRepository {
     await _firestore.collection('students').add(student.toMap());
   }
 
-  Stream<List<Student>> studentStreamForClass(String classId) {
-    return _firestore.collection('students')
-      .where('classId', isEqualTo: classId)
-      .snapshots()
-      .map((snap) => snap.docs.map((doc) => Student.fromMap(doc.data())).toList());
+  Stream<List<MapEntry<String, Student>>> studentsStreamForClass(String classId) {
+    // Return list of MapEntry(docId, Student)
+    return _firestore
+        .collection('students')
+        .where('classId', isEqualTo: classId)
+        .snapshots()
+        .map((snap) =>
+            snap.docs.map((doc) => MapEntry(doc.id, Student.fromMap(doc.data()))).toList());
   }
 
   // Delete using doc id for now

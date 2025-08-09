@@ -1,7 +1,5 @@
 part of 'students_bloc.dart';
 
-import 'package:ama_meet_admin/models/student.dart';
-
 abstract class StudentsEvent {}
 
 class LoadStudents extends StudentsEvent {}
