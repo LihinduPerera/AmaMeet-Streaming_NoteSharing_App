@@ -17,6 +17,17 @@ class Student extends Equatable{
     required this.createdAt,
   });
 
+  factory Student.fromMap(Map<dynamic, dynamic> m) {
+    return Student(
+      id: m['id'] ?? '',
+      classId: m['classId'] ?? '',
+      name: m['name'] ?? '',
+      email: m['email']  ?? '',
+      passwordHash: m['passwordHash'] ?? '',
+      createdAt: m["createdAt"] ?? 0,
+    );
+  }
+
   @override
   List<Object?> get props => [id, classId, name, email, passwordHash, createdAt];
 }
