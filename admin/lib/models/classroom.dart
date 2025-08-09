@@ -13,6 +13,22 @@ class Classroom extends Equatable {
     required this.createdAt,
   });
 
+  factory Classroom.fromMap(Map<dynamic, dynamic> m) {
+    return Classroom(
+      id: m['id'] ?? '',
+      name: m['name'] ?? '',
+      year: m['year'] ?? 0,
+      createdAt: m['createdAt'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'name': name,
+    'year': year,
+    'createdAt': createdAt,
+  };
+
   @override
   List<Object?> get props => [id, name, year, createdAt];
 }
