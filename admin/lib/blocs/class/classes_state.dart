@@ -1,7 +1,5 @@
 part of 'classes_bloc.dart';
 
-import 'package:ama_meet_admin/models/classroom.dart';
-
 abstract class ClassesState {}
 
 class ClassesLoading extends ClassesState {}
