@@ -1,6 +1,6 @@
-import 'package:ama_meet/pages/account_page.dart';
-import 'package:ama_meet/pages/meeting_page.dart';
-import 'package:ama_meet/pages/note_page.dart';
+import 'package:ama_meet/screens/account_page.dart';
+import 'package:ama_meet/screens/meeting_page.dart';
+import 'package:ama_meet/screens/note_page.dart';
 import 'package:ama_meet/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
