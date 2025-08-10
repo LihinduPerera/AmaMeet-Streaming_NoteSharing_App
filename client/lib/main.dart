@@ -1,4 +1,3 @@
-import 'package:ama_meet/controllers/auth_service.dart';
 import 'package:ama_meet/screens/login_page.dart';
 import 'package:ama_meet/screens/page_selection.dart';
 import 'package:ama_meet/utils/colors.dart';
@@ -28,34 +27,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/pageSelection': (context) => const PageSelection(),
       },
-      home: StreamBuilder(
-        stream: AuthService().authChanges,
-        builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if(snapshot.hasData) {
-              Navigator.pushReplacementNamed(context, '/pageSelection');
-            } else {
-              Navigator.pushReplacementNamed(context, '/login');
-              // Navigator.pushReplacementNamed(context, '/pageSelection');
-            }
-          });
-
-          // Reutrn CircularProgressIndicator while navigating
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        },
-      )
+      home: PageSelection()
     );
   }
 }

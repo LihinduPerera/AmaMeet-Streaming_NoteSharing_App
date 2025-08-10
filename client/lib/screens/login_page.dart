@@ -1,5 +1,3 @@
-
-import 'package:ama_meet/controllers/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -11,7 +9,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final AuthService _authService = AuthService();
+  // final AuthService _authService = AuthService();
   
   final formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
@@ -52,11 +50,11 @@ class _LoginPageState extends State<LoginPage> {
                                     Color.fromARGB(255, 229, 255, 254)
                                         .withOpacity(0.6)),
                             onPressed: () async {
-                              bool result = await _authService.signInWithGoogle(context);
+                              // bool result = await _authService.signInWithGoogle(context);
 
-                              if (result) {
-                                Navigator.restorablePushNamedAndRemoveUntil(context, '/pageSelection', (route)=> false);
-                              }
+                              // if (result) {
+                              //   Navigator.restorablePushNamedAndRemoveUntil(context, '/pageSelection', (route)=> false);
+                              // }
                             },
                             child: Container(
                                 height: 30,

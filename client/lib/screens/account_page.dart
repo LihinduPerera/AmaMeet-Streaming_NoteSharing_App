@@ -1,4 +1,3 @@
-import 'package:ama_meet/controllers/auth_service.dart';
 import 'package:ama_meet/models/user_model.dart';
 import 'package:ama_meet/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
 
-  final AuthService _authService = AuthService();
+  // final AuthService _authService = AuthService();
   UserModel? _userModel;
   bool _isLoadng = true;
 
@@ -23,10 +22,10 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Future<void> _loadUserData() async {
-    UserModel? user = await _authService.getUserData();
+    // UserModel? user = await _authService.getUserData();
     if(mounted) {
       setState(() {
-        _userModel = user;
+        // _userModel = user;
         _isLoadng = false;
       });
     }
@@ -84,7 +83,7 @@ class _AccountPageState extends State<AccountPage> {
                   const Spacer(),
                   ElevatedButton.icon(
                     onPressed: () async{
-                      await _authService.signOut();
+                      // await _authService.signOut();
                       if(context.mounted) {
                         Navigator.of(context).pushReplacementNamed('/login');
                       }
