@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:ama_meet/models/student.dart';
 import 'package:ama_meet/utils/hash.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,13 +12,11 @@ class StudentRepository {
     try {
       final hash = sha256Hash(password);
 
-      // Attempt to query by ID
       var querySnap = await _firestore
           .collection('students')
           .where('id', isEqualTo: idOrEmail)
           .get();
 
-      // If not found by ID, try querying by email
       if (querySnap.docs.isEmpty) {
         querySnap = await _firestore
             .collection('students')
@@ -34,7 +33,8 @@ class StudentRepository {
         throw Exception("Incorrect password.");
       }
 
-      await _storage.write(key: 'student', value: student.toMap().toString());
+      // Store JSON string, not just .toString()
+      await _storage.write(key: 'student', value: jsonEncode(student.toMap()));
       return student;
     } catch (e) {
       throw Exception("Login error: ${e.toString()}");
@@ -46,7 +46,8 @@ class StudentRepository {
       final data = await _storage.read(key: 'student');
       if (data == null) return null;
 
-      final map = _stringToMap(data);
+      // Parse JSON string back to Map
+      final map = jsonDecode(data) as Map<String, dynamic>;
       return Student.fromMap(map);
     } catch (e) {
       throw Exception("Failed to fetch saved student: ${e.toString()}");
@@ -59,17 +60,5 @@ class StudentRepository {
     } catch (e) {
       throw Exception("Failed to log out: ${e.toString()}");
     }
-  }
-
-  Map<String, dynamic> _stringToMap(String str) {
-    str = str.replaceAll(RegExp(r'^{|}$'), '');
-    final Map<String, dynamic> map = {};
-    for (var pair in str.split(', ')) {
-      final kv = pair.split(': ');
-      if (kv.length == 2) {
-        map[kv[0]] = kv[1];
-      }
-    }
-    return map;
   }
 }
