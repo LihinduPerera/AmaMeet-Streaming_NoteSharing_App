@@ -25,10 +25,14 @@ class StudentRepository {
           .get();
     }
 
-    if (result.docs.isEmpty) return null;
+    if (result.docs.isEmpty) {
+      throw Exception("Student not found with ID/Email: $idOrEmail");
+    }
 
     final student = Student.fromMap(result.docs.first.data());
-    if (student.passwordHash != hash) return null;
+    if (student.passwordHash != hash) {
+      throw Exception("Incorrect password.");
+    }
 
     await _storage.write(key: 'student', value: student.toMap().toString());
     return student;
