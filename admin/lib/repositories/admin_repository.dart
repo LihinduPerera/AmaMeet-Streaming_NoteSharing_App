@@ -23,12 +23,12 @@ class AdminRepository {
     await docRef.set(cr.toMap());
   }
 
-  Future<void> deleteClass(String cId) async{
+  Future<void> deleteClass(String classId) async{
     //Delete class doc
-    await _firestore.collection('classes').doc(cId).delete();
+    await _firestore.collection('classes').doc(classId).delete();
 
     // Delete all students of the class
-    final querySnap = await _firestore.collection('students').where('clssId', isEqualTo: cId).get();
+    final querySnap = await _firestore.collection('students').where('classId', isEqualTo: classId).get();
     final batch = _firestore.batch();
     for(final doc in querySnap.docs) {
       batch.delete(doc.reference);
@@ -36,7 +36,7 @@ class AdminRepository {
     await batch.commit();
 
     //Delete counter
-    await _firestore.collection('counters').doc(cId).delete();
+    await _firestore.collection('counters').doc(classId).delete();
   }
 
   Stream<List<ClassRoom>> classStream() {
