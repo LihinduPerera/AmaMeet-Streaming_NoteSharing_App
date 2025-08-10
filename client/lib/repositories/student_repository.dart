@@ -8,46 +8,57 @@ class StudentRepository {
   final _storage = const FlutterSecureStorage();
 
   Future<Student?> loginWithIdOrEmail(String idOrEmail, String password) async {
-    final hash = sha256Hash(password);
+    try {
+      final hash = sha256Hash(password);
 
-    final querySnap = await _firestore
-        .collection('students')
-        .where('id', isEqualTo: idOrEmail)
-        .get();
-
-    QuerySnapshot<Map<String, dynamic>> result = querySnap;
-
-    // If not found by ID, try email
-    if (result.docs.isEmpty) {
-      result = await _firestore
+      // Attempt to query by ID
+      var querySnap = await _firestore
           .collection('students')
-          .where('email', isEqualTo: idOrEmail)
+          .where('id', isEqualTo: idOrEmail)
           .get();
-    }
 
-    if (result.docs.isEmpty) {
-      throw Exception("Student not found with ID/Email: $idOrEmail");
-    }
+      // If not found by ID, try querying by email
+      if (querySnap.docs.isEmpty) {
+        querySnap = await _firestore
+            .collection('students')
+            .where('email', isEqualTo: idOrEmail)
+            .get();
+      }
 
-    final student = Student.fromMap(result.docs.first.data());
-    if (student.passwordHash != hash) {
-      throw Exception("Incorrect password.");
-    }
+      if (querySnap.docs.isEmpty) {
+        throw Exception("Student not found with ID/Email: $idOrEmail");
+      }
 
-    await _storage.write(key: 'student', value: student.toMap().toString());
-    return student;
+      final student = Student.fromMap(querySnap.docs.first.data());
+      if (student.passwordHash != hash) {
+        throw Exception("Incorrect password.");
+      }
+
+      await _storage.write(key: 'student', value: student.toMap().toString());
+      return student;
+    } catch (e) {
+      throw Exception("Login error: ${e.toString()}");
+    }
   }
 
   Future<Student?> getSavedStudent() async {
-    final data = await _storage.read(key: 'student');
-    if (data == null) return null;
+    try {
+      final data = await _storage.read(key: 'student');
+      if (data == null) return null;
 
-    final map = _stringToMap(data);
-    return Student.fromMap(map);
+      final map = _stringToMap(data);
+      return Student.fromMap(map);
+    } catch (e) {
+      throw Exception("Failed to fetch saved student: ${e.toString()}");
+    }
   }
 
   Future<void> logout() async {
-    await _storage.delete(key: 'student');
+    try {
+      await _storage.delete(key: 'student');
+    } catch (e) {
+      throw Exception("Failed to log out: ${e.toString()}");
+    }
   }
 
   Map<String, dynamic> _stringToMap(String str) {
