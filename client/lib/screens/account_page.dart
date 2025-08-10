@@ -1,4 +1,3 @@
-import 'package:ama_meet/models/user_model.dart';
 import 'package:ama_meet/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
 
   // final AuthService _authService = AuthService();
-  UserModel? _userModel;
+  // UserModel? _userModel;
   bool _isLoadng = true;
 
   @override
@@ -44,10 +43,10 @@ class _AccountPageState extends State<AccountPage> {
       ),
 
       body: _isLoadng
-        ? const Center(
-          child: CircularProgressIndicator(),
-        )
-        : _userModel == null
+        // ? const Center(
+        //   child: CircularProgressIndicator(),
+        // )
+        // : _userModel == null
           ? const Center(
             child: Text("No User Data Found !!")
           )
@@ -56,30 +55,30 @@ class _AccountPageState extends State<AccountPage> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(_userModel!.profilePhoto),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    _userModel!.username,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    _userModel!.uid,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color:  Colors.grey
-                    ),
-                  ),
+                  // CircleAvatar(
+                  //   radius: 50,
+                  //   backgroundImage: NetworkImage(_userModel!.profilePhoto),
+                  // ),
+                  // const SizedBox(
+                  //   height: 16,
+                  // ),
+                  // Text(
+                  //   _userModel!.username,
+                  //   style: const TextStyle(
+                  //     fontSize: 22,
+                  //     fontWeight: FontWeight.bold
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                  // Text(
+                  //   // _userModel!.uid,
+                  //   style: const TextStyle(
+                  //     fontSize: 16,
+                  //     color:  Colors.grey
+                  //   ),
+                  // ),
                   const Spacer(),
                   ElevatedButton.icon(
                     onPressed: () async{
