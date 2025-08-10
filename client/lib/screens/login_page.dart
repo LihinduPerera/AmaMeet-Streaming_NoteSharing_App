@@ -33,88 +33,93 @@ class _LoginPageState extends State<LoginPage> {
           return SingleChildScrollView(
             child: Form(
               key: formKey,
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .9,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Lottie.asset(
-                          'assets/animations/hellow_world.json',
-                          width: MediaQuery.of(context).size.width,
-                          fit: BoxFit.fitWidth,
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: const [
-                            Text(
-                              "Log In",
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w700,
+                  Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .9,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/animations/hellow_world.json',
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.fitWidth,
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: const [
+                                Text(
+                                  "Log In",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * .9,
+                              child: TextFormField(
+                                controller: _idOrEmailController,
+                                validator: (value) =>
+                                    value!.isEmpty ? "Enter ID or Email" : null,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  label: Text("ID or Email"),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 5),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * .9,
-                          child: TextFormField(
-                            controller: _idOrEmailController,
-                            validator: (value) =>
-                                value!.isEmpty ? "Enter ID or Email" : null,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              label: Text("ID or Email"),
-                            ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .9,
+                        child: TextFormField(
+                          controller: _passwordController,
+                          validator: (value) => value!.length < 8
+                              ? "Password must be at least 8 characters"
+                              : null,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            label: Text("Password"),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .9,
-                    child: TextFormField(
-                      controller: _passwordController,
-                      validator: (value) => value!.length < 8
-                          ? "Password must be at least 8 characters"
-                          : null,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        label: Text("Password"),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 60,
-                    width: MediaQuery.of(context).size.width * .9,
-                    child: ElevatedButton(
-                      onPressed: state is AuthLoading
-                          ? null
-                          : () {
-                              if (formKey.currentState!.validate()) {
-                                context.read<AuthBloc>().add(
-                                      LoginRequested(
-                                        _idOrEmailController.text.trim(),
-                                        _passwordController.text.trim(),
-                                      ),
-                                    );
-                              }
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 219, 197, 74)
-                            .withOpacity(0.6),
-                        foregroundColor: Colors.black,
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width * .9,
+                        child: ElevatedButton(
+                          onPressed: state is AuthLoading
+                              ? null
+                              : () {
+                                  if (formKey.currentState!.validate()) {
+                                    context.read<AuthBloc>().add(
+                                          LoginRequested(
+                                            _idOrEmailController.text.trim(),
+                                            _passwordController.text.trim(),
+                                          ),
+                                        );
+                                  }
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 219, 197, 74)
+                                .withOpacity(0.6),
+                            foregroundColor: Colors.black,
+                          ),
+                          child: state is AuthLoading
+                              ? const CircularProgressIndicator()
+                              : const Text("Login", style: TextStyle(fontSize: 16)),
+                        ),
                       ),
-                      child: state is AuthLoading
-                          ? const CircularProgressIndicator()
-                          : const Text("Login", style: TextStyle(fontSize: 16)),
-                    ),
+                    ],
                   ),
                 ],
               ),
