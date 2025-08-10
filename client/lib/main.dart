@@ -1,6 +1,5 @@
 import 'package:ama_meet/blocs/auth/auth_bloc.dart';
 import 'package:ama_meet/repositories/student_repository.dart';
-import 'package:ama_meet/screens/account_page.dart';
 import 'package:ama_meet/screens/login_page.dart';
 import 'package:ama_meet/screens/page_selection.dart';
 import 'package:ama_meet/utils/colors.dart';
@@ -14,45 +13,43 @@ void main() async {
 
   final studentRepo = StudentRepository();
 
-  runApp(
-    BlocProvider(
-      create: (context) => AuthBloc(studentRepo)..add(AppStarted()),
-      child: const MyApp(),
-    )
-  );
+  runApp(MyApp(studentRepo: studentRepo));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final StudentRepository studentRepo;
+  const MyApp({super.key, required this.studentRepo});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Ama Meet',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: buttonColor),
-        useMaterial3: true,
-        fontFamily: 'Poppins',
-      ),
-      routes: {
-        '/login': (context) => const LoginPage(),
-        '/pageSelection': (context) => const PageSelection(),
-        '/account': (context) => const AccountPage(),
-      },
-      home: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          if(state is AuthLoading) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator(),),
-            );
-          } else if (state is AuthAuthenticated) {
-            return const PageSelection();
-          } else {
-            return const LoginPage();
-          }
+    return BlocProvider(
+      create: (_) => AuthBloc(studentRepo)..add(AppStarted()),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Ama Meet',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: buttonColor),
+          useMaterial3: true,
+          fontFamily: 'Poppins',
+        ),
+        routes: {
+          '/login': (context) => const LoginPage(),
+          '/pageSelection': (context) => const PageSelection(),
         },
-      )
+        home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            } else if (state is AuthAuthenticated) {
+              return const PageSelection();
+            } else {
+              return const LoginPage();
+            }
+          },
+        ),
+      ),
     );
   }
 }
