@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:ama_meet_admin/models/class_note.dart';
+import 'package:ama_meet_admin/repositories/class_note_repository.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -16,11 +18,37 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   late PdfViewerController _pdfViewerController;
   bool _isLoading = true;
   String? _error;
+  File? _localFile;
+
+  final ClassNoteRepository _repo = ClassNoteRepository();
 
   @override
   void initState() {
     super.initState();
     _pdfViewerController = PdfViewerController();
+    _loadLocalPdf();
+  }
+
+  Future<void> _loadLocalPdf() async {
+    try {
+      final file = await _repo.getOrDownloadFile(
+        url: widget.note.url,
+        localFilename: widget.note.filename,
+      );
+      if (mounted) {
+        setState(() {
+          _localFile = file;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _error = e.toString();
+        });
+      }
+    }
   }
 
   @override
@@ -43,45 +71,21 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
               _pdfViewerController.zoomLevel = _pdfViewerController.zoomLevel - 0.25;
             },
           ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              switch (value) {
-                case 'fit_page':
-                  _pdfViewerController.zoomLevel = 1.0;
-                  break;
-                case 'fit_width':
-                  _pdfViewerController.zoomLevel = 1.2;
-                  break;
-                case 'actual_size':
-                  _pdfViewerController.zoomLevel = 1.0;
-                  break;
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: 'fit_page', child: Text('Fit Page')),
-              const PopupMenuItem(value: 'fit_width', child: Text('Fit Width')),
-              const PopupMenuItem(value: 'actual_size', child: Text('Actual Size')),
-            ],
-          ),
         ],
       ),
       body: Stack(
         children: [
-          SfPdfViewer.network(
-            widget.note.url,
-            controller: _pdfViewerController,
-            onDocumentLoaded: (PdfDocumentLoadedDetails details) {
-              setState(() {
-                _isLoading = false;
-              });
-            },
-            onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
-              setState(() {
-                _isLoading = false;
-                _error = details.error;
-              });
-            },
-          ),
+          if (_localFile != null)
+            SfPdfViewer.file(
+              _localFile!,
+              controller: _pdfViewerController,
+              onDocumentLoaded: (_) {},
+              onDocumentLoadFailed: (details) {
+                setState(() {
+                  _error = details.error;
+                });
+              },
+            ),
           if (_isLoading)
             const Center(
               child: Column(
@@ -89,18 +93,18 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text('Loading PDF...'),
+                  Text('Downloading PDF...'),
                 ],
               ),
             ),
-          if (_error != null)
+          if (_error != null && !_isLoading)
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.error, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('Failed to load PDF: $_error'),
+                  Text('Failed to load PDF:\n$_error'),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),

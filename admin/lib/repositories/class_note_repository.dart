@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-
 import 'package:ama_meet_admin/models/class_note.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,7 +13,6 @@ final String CLOUDINARY_UPLOAD_PRESET = dotenv.env['CLOUDINARY_UPLOAD_PRESET'] ?
 class ClassNoteRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
-  // Stream notes for a class, grouped by section
   Stream<List<ClassNote>> notesStreamForClass(String classId) {
     return _firestore
         .collection('class_notes')
@@ -27,7 +25,6 @@ class ClassNoteRepository {
             .toList());
   }
 
-  // Upload a PDF to Cloudinary and create a Firestore doc
   Future<void> uploadClassNote({
     required String classId,
     required File file,
@@ -35,8 +32,7 @@ class ClassNoteRepository {
     required String sectionTitle,
     required int sectionOrder,
   }) async {
-    // 1) Upload to Cloudinary
-    final uri = Uri.parse('https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/auto/upload');
+    final uri = Uri.parse('https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/raw/upload');
     final request = http.MultipartRequest('POST', uri);
 
     request.fields['upload_preset'] = CLOUDINARY_UPLOAD_PRESET;
@@ -56,7 +52,6 @@ class ClassNoteRepository {
     final url = body['secure_url'] as String? ?? body['url'] as String? ?? '';
     final publicId = body['public_id'] as String? ?? '';
 
-    // 2) Save metadata in Firestore
     final noteDoc = {
       'classId': classId,
       'filename': filename,
@@ -69,7 +64,6 @@ class ClassNoteRepository {
     await _firestore.collection('class_notes').add(noteDoc);
   }
 
-  // Delete note by doc id
   Future<void> deleteClassNote({
     required String docId,
     required String publicId,
@@ -77,7 +71,6 @@ class ClassNoteRepository {
     await _firestore.collection('class_notes').doc(docId).delete();
   }
 
-  // Update an existing note
   Future<void> updateClassNote({
     required String docId,
     required File file,
@@ -85,7 +78,7 @@ class ClassNoteRepository {
     required String sectionTitle,
     required int sectionOrder,
   }) async {
-    final uri = Uri.parse('https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/auto/upload');
+    final uri = Uri.parse('https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/raw/upload');
     final request = http.MultipartRequest('POST', uri);
     request.fields['upload_preset'] = CLOUDINARY_UPLOAD_PRESET;
     final multipartFile = await http.MultipartFile.fromPath('file', file.path, filename: filename);
@@ -110,12 +103,18 @@ class ClassNoteRepository {
     });
   }
 
-  // Download file to a local path and return that File
-  Future<File> downloadFileToCache({required String url, required String localFilename}) async {
+  /// Returns cached file if exists, otherwise downloads & caches
+  Future<File> getOrDownloadFile({
+    required String url,
+    required String localFilename,
+  }) async {
     final dir = await getApplicationDocumentsDirectory();
     final filePath = p.join(dir.path, localFilename);
     final f = File(filePath);
-    if (await f.exists()) return f;
+
+    if (await f.exists()) {
+      return f;
+    }
 
     final res = await http.get(Uri.parse(url));
     if (res.statusCode != 200) throw Exception('Failed to download file: ${res.statusCode}');
@@ -123,7 +122,6 @@ class ClassNoteRepository {
     return f;
   }
 
-  // Remove cached file by localFilename
   Future<void> removeCachedFile(String localFilename) async {
     final dir = await getApplicationDocumentsDirectory();
     final filePath = p.join(dir.path, localFilename);
