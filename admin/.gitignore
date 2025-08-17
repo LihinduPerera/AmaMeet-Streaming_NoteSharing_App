@@ -35,6 +35,7 @@ migrate_working_dir/
 /lib/firebase_options.dart
 android/app/google-services.json
 firebase.json
+.env
 
 # Symbolication related
 app.*.symbols
