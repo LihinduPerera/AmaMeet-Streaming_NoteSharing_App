@@ -10,6 +10,8 @@ import 'package:path/path.dart' as p;
 final String CLOUDINARY_CLOUD_NAME = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
 final String CLOUDINARY_UPLOAD_PRESET = dotenv.env['CLOUDINARY_UPLOAD_PRESET'] ?? '';
 
+// **Remember to turn on PDF and ZIP files delivery:	Allow delivery of PDF and ZIP files in cloudinary security settings!!!**
+
 class ClassNoteRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
