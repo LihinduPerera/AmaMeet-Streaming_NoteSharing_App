@@ -7,7 +7,7 @@ import '../models/classroom.dart';
 import '../repositories/admin_repository.dart';
 
 class AdminDashboard extends StatefulWidget {
-  const AdminDashboard({Key? key}) : super(key: key);
+  const AdminDashboard({super.key});
 
   @override
   State<AdminDashboard> createState() => _AdminDashboardState();

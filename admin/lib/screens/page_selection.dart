@@ -1,4 +1,5 @@
 import 'package:ama_meet_admin/screens/admin_dashboard.dart';
+import 'package:ama_meet_admin/screens/notes_page.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
@@ -15,7 +16,7 @@ class _PageSelectionState extends State<PageSelection> {
 
   final List<Widget> pages = [
     AdminDashboard(),
-    Center(child: Text("Page2")),
+    NotesPage(),
     Center(child: Text("Page3")),
   ];
 
