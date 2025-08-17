@@ -7,14 +7,19 @@ class ClassNote extends Equatable {
   final String url;
   final String publicId;
   final int uploadedAt;
+  final String sectionTitle; // New field for lesson/section title
+  final int sectionOrder; // New field for ordering sections
 
-  const ClassNote(
-      {required this.docId,
-      required this.classId,
-      required this.filename,
-      required this.url,
-      required this.publicId,
-      required this.uploadedAt});
+  const ClassNote({
+    required this.docId,
+    required this.classId,
+    required this.filename,
+    required this.url,
+    required this.publicId,
+    required this.uploadedAt,
+    required this.sectionTitle,
+    required this.sectionOrder,
+  });
 
   factory ClassNote.fromMap(String docId, Map<String, dynamic> m) {
     return ClassNote(
@@ -24,6 +29,8 @@ class ClassNote extends Equatable {
       url: m['url'] ?? '',
       publicId: m['publicId'] ?? '',
       uploadedAt: m['uploadedAt'] ?? 0,
+      sectionTitle: m['sectionTitle'] ?? 'General',
+      sectionOrder: m['sectionOrder'] ?? 0,
     );
   }
 
@@ -33,9 +40,19 @@ class ClassNote extends Equatable {
         'url': url,
         'publicId': publicId,
         'uploadedAt': uploadedAt,
+        'sectionTitle': sectionTitle,
+        'sectionOrder': sectionOrder,
       };
 
   @override
-  List<Object?> get props =>
-      [docId, classId, filename, url, publicId, uploadedAt];
+  List<Object?> get props => [
+        docId,
+        classId,
+        filename,
+        url,
+        publicId,
+        uploadedAt,
+        sectionTitle,
+        sectionOrder,
+      ];
 }

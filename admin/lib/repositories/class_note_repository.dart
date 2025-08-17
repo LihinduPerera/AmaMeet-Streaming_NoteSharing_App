@@ -10,17 +10,17 @@ import 'package:path/path.dart' as p;
 
 final String CLOUDINARY_CLOUD_NAME = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
 final String CLOUDINARY_UPLOAD_PRESET = dotenv.env['CLOUDINARY_UPLOAD_PRESET'] ?? '';
-// If you prefer signed uploads, implement server-side signing and send signature/timestamp from your app backend.
 
 class ClassNoteRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
-  // Stream notes for a class
+  // Stream notes for a class, grouped by section
   Stream<List<ClassNote>> notesStreamForClass(String classId) {
     return _firestore
         .collection('class_notes')
         .where('classId', isEqualTo: classId)
-        .orderBy('uploadedAt', descending: true)
+        .orderBy('sectionOrder', descending: false)
+        .orderBy('uploadedAt', descending: false)
         .snapshots()
         .map((snap) => snap.docs
             .map((d) => ClassNote.fromMap(d.id, d.data() as Map<String, dynamic>))
@@ -28,19 +28,18 @@ class ClassNoteRepository {
   }
 
   // Upload a PDF to Cloudinary and create a Firestore doc
-  // file: a File pointing to a local PDF
   Future<void> uploadClassNote({
     required String classId,
     required File file,
     required String filename,
+    required String sectionTitle,
+    required int sectionOrder,
   }) async {
     // 1) Upload to Cloudinary
     final uri = Uri.parse('https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/auto/upload');
     final request = http.MultipartRequest('POST', uri);
 
-    // unsigned use upload_preset
     request.fields['upload_preset'] = CLOUDINARY_UPLOAD_PRESET;
-    // optional folder or tags
     request.fields['folder'] = 'ama_meet_class_notes/$classId';
 
     final multipartFile = await http.MultipartFile.fromPath('file', file.path, filename: filename);
@@ -64,30 +63,28 @@ class ClassNoteRepository {
       'url': url,
       'publicId': publicId,
       'uploadedAt': DateTime.now().millisecondsSinceEpoch,
+      'sectionTitle': sectionTitle,
+      'sectionOrder': sectionOrder,
     };
     await _firestore.collection('class_notes').add(noteDoc);
   }
 
-  // Delete note by doc id: remove Firestore doc and attempt to delete file from Cloudinary
+  // Delete note by doc id
   Future<void> deleteClassNote({
     required String docId,
     required String publicId,
   }) async {
-    // Delete Firestore doc
     await _firestore.collection('class_notes').doc(docId).delete();
-
-    // Optionally delete from Cloudinary (requires API key/secret or a server-side signed endpoint).
-    // For security, best to call your backend to delete Cloudinary asset (do not embed API secret into app).
-    // If you have a server endpoint, call it here to instruct deletion.
   }
 
-  // Replace/update an existing note (upload a new file, update firestore doc)
+  // Update an existing note
   Future<void> updateClassNote({
     required String docId,
     required File file,
     required String filename,
+    required String sectionTitle,
+    required int sectionOrder,
   }) async {
-    // Upload new file (similar to upload)
     final uri = Uri.parse('https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/auto/upload');
     final request = http.MultipartRequest('POST', uri);
     request.fields['upload_preset'] = CLOUDINARY_UPLOAD_PRESET;
@@ -108,6 +105,8 @@ class ClassNoteRepository {
       'url': url,
       'publicId': publicId,
       'uploadedAt': DateTime.now().millisecondsSinceEpoch,
+      'sectionTitle': sectionTitle,
+      'sectionOrder': sectionOrder,
     });
   }
 

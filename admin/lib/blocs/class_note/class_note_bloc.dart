@@ -17,19 +17,28 @@ class ClassNotesBloc extends Bloc<ClassNotesEvent, ClassNotesState> {
     on<UploadClassNoteEvent>(_onUpload);
     on<DeleteClassNoteEvent>(_onDelete);
     on<UpdateClassNoteEvent>(_onUpdate);
+    on<_ClassNotesUpdated>((event, emit) => emit(ClassNotesLoaded(event.notes)));
+    on<_ClassNotesError>((event, emit) => emit(ClassNotesError(event.message)));
   }
 
   Future<void> _onLoad(LoadClassNotes event, Emitter emit) async {
     emit(ClassNotesLoading());
     await _notesSub?.cancel();
-    _notesSub = _repo.notesStreamForClass(event.classId).listen((notes) {
-      add(_ClassNotesUpdated(notes));
-    }, onError: (e) => add(_ClassNotesError(e.toString())));
+    _notesSub = _repo.notesStreamForClass(event.classId).listen(
+      (notes) => add(_ClassNotesUpdated(notes)),
+      onError: (e) => add(_ClassNotesError(e.toString())),
+    );
   }
 
   Future<void> _onUpload(UploadClassNoteEvent e, Emitter emit) async {
     try {
-      await _repo.uploadClassNote(classId: e.classId, file: e.file, filename: e.filename);
+      await _repo.uploadClassNote(
+        classId: e.classId,
+        file: e.file,
+        filename: e.filename,
+        sectionTitle: e.sectionTitle,
+        sectionOrder: e.sectionOrder,
+      );
       // Firestore stream will update UI
     } catch (err) {
       emit(ClassNotesError(err.toString()));
@@ -47,16 +56,17 @@ class ClassNotesBloc extends Bloc<ClassNotesEvent, ClassNotesState> {
 
   Future<void> _onUpdate(UpdateClassNoteEvent e, Emitter emit) async {
     try {
-      await _repo.updateClassNote(docId: e.docId, file: e.file, filename: e.filename);
+      await _repo.updateClassNote(
+        docId: e.docId,
+        file: e.file,
+        filename: e.filename,
+        sectionTitle: e.sectionTitle,
+        sectionOrder: e.sectionOrder,
+      );
       await _repo.removeCachedFile(e.localFilenameToRemove);
     } catch (err) {
       emit(ClassNotesError(err.toString()));
     }
-  }
-
-  // internal events used by stream
-  void _onInternalEvents() {
-    // no-op here: see _ClassNotesUpdated below
   }
 
   @override
@@ -66,11 +76,12 @@ class ClassNotesBloc extends Bloc<ClassNotesEvent, ClassNotesState> {
   }
 }
 
-// Internal events used only inside the bloc:
+// Internal events used only inside the bloc
 class _ClassNotesUpdated extends ClassNotesEvent {
   final List<ClassNote> notes;
   _ClassNotesUpdated(this.notes);
 }
+
 class _ClassNotesError extends ClassNotesEvent {
   final String message;
   _ClassNotesError(this.message);
