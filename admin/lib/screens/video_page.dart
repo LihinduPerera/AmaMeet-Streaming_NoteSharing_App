@@ -4,7 +4,7 @@ import 'package:ama_meet_admin/blocs/video/video_bloc.dart';
 import 'package:ama_meet_admin/models/class_video.dart';
 import 'package:ama_meet_admin/repositories/class_video_repository.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
-import 'package:better_player/better_player.dart';
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -86,7 +86,8 @@ class _VideosPageState extends State<VideosPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (state is ClassesError) {
-                  return Text('Error: ${state.message}', style: const TextStyle(color: Colors.red));
+                  return Text('Error: ${state.message}',
+                      style: const TextStyle(color: Colors.red));
                 }
                 return const SizedBox();
               },
@@ -102,18 +103,21 @@ class _VideosPageState extends State<VideosPage> {
                     child: BlocBuilder<ClassVideosBloc, ClassVideosState>(
                       builder: (context, state) {
                         if (state is ClassVideosLoading) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
                         if (state is ClassVideosLoaded) {
                           if (state.videos.isEmpty) {
-                            return const Center(child: Text("No videos uploaded yet"));
+                            return const Center(
+                                child: Text("No videos uploaded yet"));
                           }
                           return ListView.builder(
                             itemCount: state.videos.length,
                             itemBuilder: (ctx, i) {
                               final video = state.videos[i];
                               return Card(
-                                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
                                 child: ListTile(
                                   leading: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
@@ -136,38 +140,50 @@ class _VideosPageState extends State<VideosPage> {
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                   trailing: IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
                                     onPressed: () async {
-                                      // Confirm
+                                      // Confirm delete
                                       final confirmed = await showDialog<bool>(
                                         context: context,
                                         builder: (_) => AlertDialog(
                                           title: const Text('Delete video?'),
-                                          content: Text('Delete "${video.filename}" from ${_selectedClassName ?? "this class"}?'),
+                                          content: Text(
+                                              'Delete "${video.filename}" from ${_selectedClassName ?? "this class"}?'),
                                           actions: [
-                                            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                                            TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context,
+                                                        false),
+                                                child: const Text('Cancel')),
                                             ElevatedButton(
-                                              onPressed: () => Navigator.pop(context, true),
-                                              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                              onPressed: () =>
+                                                  Navigator.pop(context, true),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.red),
                                               child: const Text('Delete'),
                                             ),
                                           ],
                                         ),
                                       );
-                                      if (confirmed == true && _selectedClassId != null) {
-                                        // dispatch delete with classId
-                                        _classVideosBloc.add(DeleteClassVideoEvent(
-                                          classId: _selectedClassId!,
-                                          docId: video.docId,
-                                          publicId: video.publicId,
-                                        ));
+                                      if (confirmed == true &&
+                                          _selectedClassId != null) {
+                                        _classVideosBloc.add(
+                                          DeleteClassVideoEvent(
+                                            classId: _selectedClassId!,
+                                            docId: video.docId,
+                                            publicId: video.publicId,
+                                          ),
+                                        );
                                       }
                                     },
                                   ),
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (_) => VideoPlayerScreen(video: video)),
+                                      MaterialPageRoute(
+                                          builder: (_) =>
+                                              VideoPlayerScreen(video: video)),
                                     );
                                   },
                                 ),
@@ -176,7 +192,8 @@ class _VideosPageState extends State<VideosPage> {
                           );
                         }
                         if (state is ClassVideosError) {
-                          return Center(child: Text("Error: ${state.message}"));
+                          return Center(
+                              child: Text("Error: ${state.message}"));
                         }
                         return const SizedBox();
                       },
@@ -203,17 +220,28 @@ class _VideosPageState extends State<VideosPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextField(controller: sectionController, decoration: const InputDecoration(labelText: "Section Title")),
+                TextField(
+                    controller: sectionController,
+                    decoration:
+                        const InputDecoration(labelText: "Section Title")),
                 const SizedBox(height: 8),
-                TextField(controller: orderController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "Order")),
+                TextField(
+                    controller: orderController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(labelText: "Order")),
                 const SizedBox(height: 8),
-                TextField(controller: filenameController, decoration: const InputDecoration(labelText: "Filename (optional)")),
+                TextField(
+                    controller: filenameController,
+                    decoration: const InputDecoration(labelText: "Filename (optional)")),
                 const SizedBox(height: 8),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.upload_file),
-                  label: Text(selectedFile == null ? "Select Video" : "File Selected"),
+                  label: Text(selectedFile == null
+                      ? "Select Video"
+                      : "File Selected"),
                   onPressed: () async {
-                    final result = await FilePicker.platform.pickFiles(type: FileType.video);
+                    final result = await FilePicker.platform
+                        .pickFiles(type: FileType.video);
                     if (result != null && result.files.isNotEmpty) {
                       setState(() {
                         selectedFile = File(result.files.single.path!);
@@ -229,24 +257,30 @@ class _VideosPageState extends State<VideosPage> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       "Selected: ${selectedFile!.path.split('/').last}",
-                      style: const TextStyle(fontSize: 12, color: Colors.green),
+                      style: const TextStyle(
+                          fontSize: 12, color: Colors.green),
                     ),
                   ),
               ],
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text("Cancel")),
+            TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text("Cancel")),
             ElevatedButton(
               onPressed: () {
                 if (selectedFile == null || _selectedClassId == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select a file and a class first')));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Select a file and a class first')));
                   return;
                 }
                 _classVideosBloc.add(UploadClassVideoEvent(
                   classId: _selectedClassId!,
                   file: selectedFile!,
-                  filename: filenameController.text.isEmpty ? selectedFile!.path.split('/').last : filenameController.text,
+                  filename: filenameController.text.isEmpty
+                      ? selectedFile!.path.split('/').last
+                      : filenameController.text,
                   sectionTitle: sectionController.text,
                   sectionOrder: int.tryParse(orderController.text) ?? 1,
                 ));
@@ -261,7 +295,7 @@ class _VideosPageState extends State<VideosPage> {
   }
 }
 
-/// Full-screen video player using BetterPlayer with manual quality selection
+/// Full-screen video player using BetterPlayerPlus with manual quality selection
 class VideoPlayerScreen extends StatefulWidget {
   final ClassVideo video;
   const VideoPlayerScreen({Key? key, required this.video}) : super(key: key);
@@ -280,17 +314,19 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     final dataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       widget.video.hlsUrl,
-      useAsmsTracks: true, // use ASM tracks for qualities
+      useAsmsTracks: true,
+      useAsmsSubtitles: true,
     );
 
     _betterPlayerController = BetterPlayerController(
-      BetterPlayerConfiguration(
+      const BetterPlayerConfiguration(
         autoPlay: true,
         aspectRatio: 16 / 9,
         fit: BoxFit.contain,
         controlsConfiguration: BetterPlayerControlsConfiguration(
-          enableQualities: true, // show qualities button
-          overflowMenuCustomItems: [], // optional
+          enableQualities: true,
+          enableFullscreen: true,
+          enablePlaybackSpeed: true,
         ),
       ),
       betterPlayerDataSource: dataSource,
