@@ -5,14 +5,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/class_video.dart';
 
 final String CLOUDINARY_CLOUD_NAME = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
-final String CLOUDINARY_UPLOAD_PRESET = dotenv.env['CLOUDINARY_UPLOAD_PRESET'] ?? '';
+final String CLOUDINARY_UPLOAD_PRESET_VIDEO = dotenv.env['CLOUDINARY_UPLOAD_PRESET_VIDEO'] ?? '';
 
 class ClassVideoRepository {
   final _firestore = FirebaseFirestore.instance;
 
   // Set your Cloudinary details here
   final cloudinary =
-      CloudinaryPublic(CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET, cache: false);
+      CloudinaryPublic(CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET_VIDEO, cache: false);
 
   Future<List<ClassVideo>> getVideos(String classId) async {
     final snapshot = await _firestore

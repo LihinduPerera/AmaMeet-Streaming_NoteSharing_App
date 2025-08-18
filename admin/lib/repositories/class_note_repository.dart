@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 final String CLOUDINARY_CLOUD_NAME = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
-final String CLOUDINARY_UPLOAD_PRESET = dotenv.env['CLOUDINARY_UPLOAD_PRESET'] ?? '';
+final String CLOUDINARY_UPLOAD_PRESET_NOTE = dotenv.env['CLOUDINARY_UPLOAD_PRESET_NOTE'] ?? '';
 
 // **Remember to turn on PDF and ZIP files delivery:	Allow delivery of PDF and ZIP files in cloudinary security settings!!!**
 
@@ -37,7 +37,7 @@ class ClassNoteRepository {
     final uri = Uri.parse('https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/raw/upload');
     final request = http.MultipartRequest('POST', uri);
 
-    request.fields['upload_preset'] = CLOUDINARY_UPLOAD_PRESET;
+    request.fields['upload_preset'] = CLOUDINARY_UPLOAD_PRESET_NOTE;
     request.fields['folder'] = 'ama_meet_class_notes/$classId';
 
     final multipartFile = await http.MultipartFile.fromPath('file', file.path, filename: filename);
@@ -82,7 +82,7 @@ class ClassNoteRepository {
   }) async {
     final uri = Uri.parse('https://api.cloudinary.com/v1_1/$CLOUDINARY_CLOUD_NAME/raw/upload');
     final request = http.MultipartRequest('POST', uri);
-    request.fields['upload_preset'] = CLOUDINARY_UPLOAD_PRESET;
+    request.fields['upload_preset'] = CLOUDINARY_UPLOAD_PRESET_NOTE;
     final multipartFile = await http.MultipartFile.fromPath('file', file.path, filename: filename);
     request.files.add(multipartFile);
     final streamed = await request.send();
