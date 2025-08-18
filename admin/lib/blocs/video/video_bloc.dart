@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ama_meet_admin/models/class_video.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
