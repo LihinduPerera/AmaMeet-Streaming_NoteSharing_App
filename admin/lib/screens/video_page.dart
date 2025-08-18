@@ -1,14 +1,12 @@
 import 'dart:io';
 import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/video/video_bloc.dart';
-import 'package:ama_meet_admin/models/class_video.dart';
 import 'package:ama_meet_admin/repositories/class_video_repository.dart';
 import 'package:ama_meet_admin/screens/video_player_screen.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 class VideosPage extends StatefulWidget {
   const VideosPage({super.key});
