@@ -4,10 +4,10 @@ import 'package:ama_meet_admin/blocs/video/video_bloc.dart';
 import 'package:ama_meet_admin/models/class_video.dart';
 import 'package:ama_meet_admin/repositories/class_video_repository.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
-import 'package:better_player_plus/better_player_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modern_player/modern_player.dart';
 
 class VideosPage extends StatefulWidget {
   const VideosPage({super.key});
@@ -110,7 +110,8 @@ class _VideosPageState extends State<VideosPage> {
                             ),
                           );
                         }
-                        if (state is ClassVideosUploadProgress && state.progress == 100) {
+                        if (state is ClassVideosUploadProgress &&
+                            state.progress == 100) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Video uploaded successfully'),
@@ -141,7 +142,8 @@ class _VideosPageState extends State<VideosPage> {
                                     borderRadius: BorderRadius.circular(8),
                                     child: Image.network(
                                       video.thumbnailUrl.replaceAll(
-                                          '<your-cloud-name>', 'your_cloud_name_here'),
+                                          '<your-cloud-name>',
+                                          'your_cloud_name_here'),
                                       width: 120,
                                       height: 68,
                                       fit: BoxFit.cover,
@@ -263,7 +265,8 @@ class _VideosPageState extends State<VideosPage> {
                 const SizedBox(height: 8),
                 TextField(
                     controller: filenameController,
-                    decoration: const InputDecoration(labelText: "Filename (optional)")),
+                    decoration:
+                        const InputDecoration(labelText: "Filename (optional)")),
                 const SizedBox(height: 8),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.upload_file),
@@ -335,40 +338,6 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  late BetterPlayerController _betterPlayerController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final dataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      widget.video.hlsUrl,
-      useAsmsTracks: true,
-      useAsmsSubtitles: true,
-    );
-
-    _betterPlayerController = BetterPlayerController(
-      const BetterPlayerConfiguration(
-        autoPlay: true,
-        aspectRatio: 16 / 9,
-        fit: BoxFit.contain,
-        controlsConfiguration: BetterPlayerControlsConfiguration(
-          enableQualities: true,
-          enableFullscreen: true,
-          enablePlaybackSpeed: true,
-        ),
-      ),
-      betterPlayerDataSource: dataSource,
-    );
-  }
-
-  @override
-  void dispose() {
-    _betterPlayerController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -379,7 +348,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       body: Center(
         child: AspectRatio(
           aspectRatio: 16 / 9,
-          child: BetterPlayer(controller: _betterPlayerController),
+          child: ModernPlayer.createPlayer(
+            video: ModernPlayerVideo.single(
+              source: widget.video.url,
+              sourceType: ModernPlayerSourceType.network,
+            ),
+          ),
         ),
       ),
     );

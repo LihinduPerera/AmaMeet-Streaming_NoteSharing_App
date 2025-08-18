@@ -132,7 +132,8 @@ class _NotesPageState extends State<NotesPage> {
                         .map<DropdownMenuItem<String>>((classRoom) {
                       return DropdownMenuItem<String>(
                         value: classRoom.id,
-                        child: Text('${classRoom.name} - Year ${classRoom.year}'),
+                        child:
+                            Text('${classRoom.name} - Year ${classRoom.year}'),
                       );
                     }).toList(),
                   );
@@ -156,14 +157,16 @@ class _NotesPageState extends State<NotesPage> {
                     child: BlocBuilder<ClassNotesBloc, ClassNotesState>(
                       builder: (context, state) {
                         if (state is ClassNotesLoading) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
                         if (state is ClassNotesError) {
                           return Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.error, size: 64, color: Colors.red),
+                                const Icon(Icons.error,
+                                    size: 64, color: Colors.red),
                                 const SizedBox(height: 16),
                                 Text('Error: ${state.message}'),
                                 const SizedBox(height: 16),
@@ -171,9 +174,8 @@ class _NotesPageState extends State<NotesPage> {
                                   onPressed: () {
                                     // retry load for currently selected class
                                     if (_selectedClassId != null) {
-                                      context
-                                          .read<ClassNotesBloc>()
-                                          .add(LoadClassNotes(_selectedClassId!));
+                                      context.read<ClassNotesBloc>().add(
+                                          LoadClassNotes(_selectedClassId!));
                                     }
                                   },
                                   child: const Text('Retry'),
@@ -200,7 +202,9 @@ class _NotesPageState extends State<NotesPage> {
   Map<String, List<ClassNote>> _groupNotesBySection(List<ClassNote> notes) {
     final Map<String, List<ClassNote>> grouped = {};
     for (final note in notes) {
-      final section = (note.sectionTitle?.trim().isEmpty ?? true) ? 'Uncategorized' : note.sectionTitle!;
+      final section = (note.sectionTitle?.trim().isEmpty ?? true)
+          ? 'Uncategorized'
+          : note.sectionTitle!;
       if (!grouped.containsKey(section)) {
         grouped[section] = [];
       }
@@ -209,7 +213,8 @@ class _NotesPageState extends State<NotesPage> {
     return grouped;
   }
 
-  Widget _buildNotesContent(BuildContext context, Map<String, List<ClassNote>> groupedNotes) {
+  Widget _buildNotesContent(
+      BuildContext context, Map<String, List<ClassNote>> groupedNotes) {
     if (groupedNotes.isEmpty) {
       return Center(
         child: Column(
@@ -246,7 +251,8 @@ class _NotesPageState extends State<NotesPage> {
           margin: EdgeInsets.zero,
           elevation: 4,
           child: ExpansionTile(
-            key: PageStorageKey(sectionTitle), // preserve expansion state better
+            key:
+                PageStorageKey(sectionTitle), // preserve expansion state better
             title: Text(
               sectionTitle,
               style: const TextStyle(
@@ -255,7 +261,9 @@ class _NotesPageState extends State<NotesPage> {
               ),
             ),
             subtitle: Text('${sectionNotes.length} note(s)'),
-            children: sectionNotes.map((note) => _buildNoteListTile(context, note)).toList(),
+            children: sectionNotes
+                .map((note) => _buildNoteListTile(context, note))
+                .toList(),
           ),
         );
       },
@@ -356,9 +364,12 @@ class _NotesPageState extends State<NotesPage> {
                     }
                   },
                   icon: const Icon(Icons.upload_file),
-                  label: Text(selectedFile == null ? 'Select PDF File' : 'File Selected'),
+                  label: Text(selectedFile == null
+                      ? 'Select PDF File'
+                      : 'File Selected'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedFile == null ? Colors.grey : Colors.green,
+                    backgroundColor:
+                        selectedFile == null ? Colors.grey : Colors.green,
                   ),
                 ),
                 if (selectedFile != null)
@@ -385,9 +396,13 @@ class _NotesPageState extends State<NotesPage> {
                     ? selectedFile?.path.split('/').last ?? 'note.pdf'
                     : filenameController.text.trim();
 
-                if (section.isEmpty || selectedFile == null || _selectedClassId == null) {
+                if (section.isEmpty ||
+                    selectedFile == null ||
+                    _selectedClassId == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please fill all required fields and select a file')),
+                    const SnackBar(
+                        content: Text(
+                            'Please fill all required fields and select a file')),
                   );
                   return;
                 }
@@ -420,7 +435,8 @@ class _NotesPageState extends State<NotesPage> {
   void _showUpdateNoteDialog(BuildContext context, ClassNote note) {
     final filenameController = TextEditingController(text: note.filename);
     final sectionController = TextEditingController(text: note.sectionTitle);
-    final orderController = TextEditingController(text: note.sectionOrder.toString());
+    final orderController =
+        TextEditingController(text: note.sectionOrder.toString());
     File? selectedFile;
 
     showDialog(
@@ -467,9 +483,12 @@ class _NotesPageState extends State<NotesPage> {
                     }
                   },
                   icon: const Icon(Icons.upload_file),
-                  label: Text(selectedFile == null ? 'Select New PDF (Optional)' : 'New File Selected'),
+                  label: Text(selectedFile == null
+                      ? 'Select New PDF (Optional)'
+                      : 'New File Selected'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedFile == null ? Colors.grey : Colors.green,
+                    backgroundColor:
+                        selectedFile == null ? Colors.grey : Colors.green,
                   ),
                 ),
                 if (selectedFile != null)
@@ -491,12 +510,14 @@ class _NotesPageState extends State<NotesPage> {
             ElevatedButton(
               onPressed: () {
                 final section = sectionController.text.trim();
-                final order = int.tryParse(orderController.text.trim()) ?? note.sectionOrder;
+                final order = int.tryParse(orderController.text.trim()) ??
+                    note.sectionOrder;
                 final filename = filenameController.text.trim();
 
                 if (section.isEmpty || filename.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please fill all required fields')),
+                    const SnackBar(
+                        content: Text('Please fill all required fields')),
                   );
                   return;
                 }
@@ -519,13 +540,16 @@ class _NotesPageState extends State<NotesPage> {
                   // doesn't support metadata-only updates, consider adding a separate event
                   // or adjust the repository. For now, we call update directly to avoid sending
                   // an invalid empty File path.
-                  _noteRepo.updateClassNote(
+                  _noteRepo
+                      .updateClassNote(
                     docId: note.docId,
-                    file: File(note.filename), // this will likely fail if path invalid
+                    file: File(
+                        note.filename), // this will likely fail if path invalid
                     filename: filename,
                     sectionTitle: section,
                     sectionOrder: order,
-                  ).then((_) {
+                  )
+                      .then((_) {
                     // remove cached local file if applicable
                     _noteRepo.removeCachedFile(note.filename);
                   }).catchError((err) {
@@ -554,7 +578,8 @@ class _NotesPageState extends State<NotesPage> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Note'),
-        content: Text('Are you sure you want to delete "${note.filename}"?\n\nThis action cannot be undone.'),
+        content: Text(
+            'Are you sure you want to delete "${note.filename}"?\n\nThis action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
