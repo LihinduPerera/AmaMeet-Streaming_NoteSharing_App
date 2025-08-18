@@ -34,8 +34,10 @@ class ClassVideo {
 
   String get docId => id;
 
-  String get thumbnailUrl =>
-      'https://res.cloudinary.com/your_cloud_name_here/video/upload/w_300,h_200,c_fill/$publicId.jpg';
+  String get thumbnailUrl {
+    if (url.endsWith('.png')) return url;
+    return url.replaceAll(RegExp(r'\.\w+$'), '.png');
+  }
 
   String get hlsUrl {
     if (url.endsWith('.m3u8')) return url;
