@@ -3,11 +3,12 @@ import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/video/video_bloc.dart';
 import 'package:ama_meet_admin/models/class_video.dart';
 import 'package:ama_meet_admin/repositories/class_video_repository.dart';
+import 'package:ama_meet_admin/screens/video_player_screen.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:modern_player/modern_player.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
 class VideosPage extends StatefulWidget {
   const VideosPage({super.key});
@@ -172,8 +173,8 @@ class _VideosPageState extends State<VideosPage> {
                                               'Delete "${video.filename}" from ${_selectedClassName ?? "this class"}?'),
                                           actions: [
                                             TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context, false),
+                                                onPressed: () => Navigator.pop(
+                                                    context, false),
                                                 child: const Text('Cancel')),
                                             ElevatedButton(
                                               onPressed: () =>
@@ -265,14 +266,13 @@ class _VideosPageState extends State<VideosPage> {
                 const SizedBox(height: 8),
                 TextField(
                     controller: filenameController,
-                    decoration:
-                        const InputDecoration(labelText: "Filename (optional)")),
+                    decoration: const InputDecoration(
+                        labelText: "Filename (optional)")),
                 const SizedBox(height: 8),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.upload_file),
-                  label: Text(selectedFile == null
-                      ? "Select Video"
-                      : "File Selected"),
+                  label: Text(
+                      selectedFile == null ? "Select Video" : "File Selected"),
                   onPressed: () async {
                     final result = await FilePicker.platform
                         .pickFiles(type: FileType.video);
@@ -291,8 +291,7 @@ class _VideosPageState extends State<VideosPage> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       "Selected: ${selectedFile!.path.split('/').last}",
-                      style: const TextStyle(
-                          fontSize: 12, color: Colors.green),
+                      style: const TextStyle(fontSize: 12, color: Colors.green),
                     ),
                   ),
               ],
@@ -323,37 +322,6 @@ class _VideosPageState extends State<VideosPage> {
               child: const Text("Upload"),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class VideoPlayerScreen extends StatefulWidget {
-  final ClassVideo video;
-  const VideoPlayerScreen({Key? key, required this.video}) : super(key: key);
-
-  @override
-  State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
-}
-
-class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.video.filename),
-        backgroundColor: buttonColor,
-      ),
-      body: Center(
-        child: AspectRatio(
-          aspectRatio: 16 / 9,
-          child: ModernPlayer.createPlayer(
-            video: ModernPlayerVideo.single(
-              source: widget.video.url,
-              sourceType: ModernPlayerSourceType.network,
-            ),
-          ),
         ),
       ),
     );
