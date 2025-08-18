@@ -17,7 +17,7 @@ class ClassVideosBloc extends Bloc<ClassVideosEvent, ClassVideosState> {
       try {
         final videos = await repository.getVideos(event.classId);
         emit(ClassVideosLoaded(videos));
-      } catch (e) {
+      } catch (e, st) {
         emit(ClassVideosError(e.toString()));
       }
     });
@@ -31,6 +31,9 @@ class ClassVideosBloc extends Bloc<ClassVideosEvent, ClassVideosState> {
           event.sectionTitle,
           event.sectionOrder,
         );
+        // after upload, refresh list
+        final videos = await repository.getVideos(event.classId);
+        emit(ClassVideosLoaded(videos));
       } catch (e) {
         emit(ClassVideosError(e.toString()));
       }
@@ -38,7 +41,10 @@ class ClassVideosBloc extends Bloc<ClassVideosEvent, ClassVideosState> {
 
     on<DeleteClassVideoEvent>((event, emit) async {
       try {
-        await repository.deleteVideo(event.docId, event.publicId, event.localFilename);
+        await repository.deleteVideo(event.classId, event.docId, event.publicId);
+        // refresh list after delete
+        final videos = await repository.getVideos(event.classId);
+        emit(ClassVideosLoaded(videos));
       } catch (e) {
         emit(ClassVideosError(e.toString()));
       }

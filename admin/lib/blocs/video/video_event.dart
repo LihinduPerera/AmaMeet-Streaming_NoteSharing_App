@@ -8,6 +8,9 @@ abstract class ClassVideosEvent extends Equatable {
 class LoadClassVideos extends ClassVideosEvent {
   final String classId;
   LoadClassVideos(this.classId);
+
+  @override
+  List<Object?> get props => [classId];
 }
 
 class UploadClassVideoEvent extends ClassVideosEvent {
@@ -23,15 +26,21 @@ class UploadClassVideoEvent extends ClassVideosEvent {
     required this.sectionTitle,
     required this.sectionOrder,
   });
+
+  @override
+  List<Object?> get props => [classId, filename, sectionTitle, sectionOrder];
 }
 
 class DeleteClassVideoEvent extends ClassVideosEvent {
+  final String classId;
   final String docId;
   final String publicId;
-  final String localFilename;
   DeleteClassVideoEvent({
+    required this.classId,
     required this.docId,
     required this.publicId,
-    required this.localFilename,
   });
+
+  @override
+  List<Object?> get props => [classId, docId, publicId];
 }
