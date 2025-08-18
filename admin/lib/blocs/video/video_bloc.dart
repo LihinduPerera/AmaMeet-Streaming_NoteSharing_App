@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:ama_meet_admin/models/class_video.dart';
 import 'package:ama_meet_admin/repositories/class_video_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -18,11 +17,12 @@ class ClassVideosBloc extends Bloc<ClassVideosEvent, ClassVideosState> {
         final videos = await repository.getVideos(event.classId);
         emit(ClassVideosLoaded(videos));
       } catch (e, st) {
-        emit(ClassVideosError(e.toString()));
+        emit(ClassVideosError('Failed to load videos: ${e.toString()}'));
       }
     });
 
     on<UploadClassVideoEvent>((event, emit) async {
+      emit(ClassVideosUploadProgress(0));
       try {
         await repository.uploadVideo(
           event.classId,
@@ -30,23 +30,26 @@ class ClassVideosBloc extends Bloc<ClassVideosEvent, ClassVideosState> {
           event.filename,
           event.sectionTitle,
           event.sectionOrder,
+          onUploadProgress: (sent, total) {
+            final progress = (sent / total * 100).clamp(0, 100).toInt();
+            emit(ClassVideosUploadProgress(progress));
+          },
         );
-        // after upload, refresh list
         final videos = await repository.getVideos(event.classId);
         emit(ClassVideosLoaded(videos));
       } catch (e) {
-        emit(ClassVideosError(e.toString()));
+        emit(ClassVideosError('Upload failed: ${e.toString()}'));
       }
     });
 
     on<DeleteClassVideoEvent>((event, emit) async {
+      emit(ClassVideosLoading());
       try {
         await repository.deleteVideo(event.classId, event.docId, event.publicId);
-        // refresh list after delete
         final videos = await repository.getVideos(event.classId);
         emit(ClassVideosLoaded(videos));
       } catch (e) {
-        emit(ClassVideosError(e.toString()));
+        emit(ClassVideosError('Delete failed: ${e.toString()}'));
       }
     });
   }

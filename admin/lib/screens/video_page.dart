@@ -58,6 +58,13 @@ class _VideosPageState extends State<VideosPage> {
             padding: const EdgeInsets.all(16),
             child: BlocBuilder<ClassesBloc, ClassesState>(
               builder: (context, state) {
+                if (state is ClassesLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state is ClassesError) {
+                  return Text('Error: ${state.message}',
+                      style: const TextStyle(color: Colors.red));
+                }
                 if (state is ClassesLoaded) {
                   return DropdownButtonFormField<String>(
                     value: _selectedClassId,
@@ -82,14 +89,7 @@ class _VideosPageState extends State<VideosPage> {
                         .toList(),
                   );
                 }
-                if (state is ClassesLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (state is ClassesError) {
-                  return Text('Error: ${state.message}',
-                      style: const TextStyle(color: Colors.red));
-                }
-                return const SizedBox();
+                return const Center(child: Text("No classes available"));
               },
             ),
           ),
@@ -100,7 +100,25 @@ class _VideosPageState extends State<VideosPage> {
                 ? const Center(child: Text("Select a class to view videos"))
                 : BlocProvider.value(
                     value: _classVideosBloc,
-                    child: BlocBuilder<ClassVideosBloc, ClassVideosState>(
+                    child: BlocConsumer<ClassVideosBloc, ClassVideosState>(
+                      listener: (context, state) {
+                        if (state is ClassVideosError) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(state.message),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                        if (state is ClassVideosUploadProgress && state.progress == 100) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Video uploaded successfully'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        }
+                      },
                       builder: (context, state) {
                         if (state is ClassVideosLoading) {
                           return const Center(
@@ -122,7 +140,8 @@ class _VideosPageState extends State<VideosPage> {
                                   leading: ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: Image.network(
-                                      video.thumbnailUrl,
+                                      video.thumbnailUrl.replaceAll(
+                                          '<your-cloud-name>', 'your_cloud_name_here'),
                                       width: 120,
                                       height: 68,
                                       fit: BoxFit.cover,
@@ -143,7 +162,6 @@ class _VideosPageState extends State<VideosPage> {
                                     icon: const Icon(Icons.delete,
                                         color: Colors.red),
                                     onPressed: () async {
-                                      // Confirm delete
                                       final confirmed = await showDialog<bool>(
                                         context: context,
                                         builder: (_) => AlertDialog(
@@ -153,8 +171,7 @@ class _VideosPageState extends State<VideosPage> {
                                           actions: [
                                             TextButton(
                                                 onPressed: () =>
-                                                    Navigator.pop(context,
-                                                        false),
+                                                    Navigator.pop(context, false),
                                                 child: const Text('Cancel')),
                                             ElevatedButton(
                                               onPressed: () =>
@@ -191,9 +208,22 @@ class _VideosPageState extends State<VideosPage> {
                             },
                           );
                         }
-                        if (state is ClassVideosError) {
+                        if (state is ClassVideosUploadProgress) {
                           return Center(
-                              child: Text("Error: ${state.message}"));
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Uploading video..."),
+                                const SizedBox(height: 16),
+                                LinearProgressIndicator(
+                                  value: state.progress / 100,
+                                  minHeight: 10,
+                                ),
+                                const SizedBox(height: 8),
+                                Text("${state.progress.toInt()}%"),
+                              ],
+                            ),
+                          );
                         }
                         return const SizedBox();
                       },
@@ -213,6 +243,7 @@ class _VideosPageState extends State<VideosPage> {
 
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
           title: const Text("Upload Video"),
@@ -295,7 +326,6 @@ class _VideosPageState extends State<VideosPage> {
   }
 }
 
-/// Full-screen video player using BetterPlayerPlus with manual quality selection
 class VideoPlayerScreen extends StatefulWidget {
   final ClassVideo video;
   const VideoPlayerScreen({Key? key, required this.video}) : super(key: key);

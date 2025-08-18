@@ -17,6 +17,14 @@ class ClassVideosLoaded extends ClassVideosState {
   List<Object?> get props => [videos];
 }
 
+class ClassVideosUploadProgress extends ClassVideosState {
+  final int progress;
+  ClassVideosUploadProgress(this.progress);
+
+  @override
+  List<Object?> get props => [progress];
+}
+
 class ClassVideosError extends ClassVideosState {
   final String message;
   ClassVideosError(this.message);
