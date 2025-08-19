@@ -1,17 +1,17 @@
 import 'package:ama_meet_admin/models/classroom.dart';
-import 'package:ama_meet_admin/repositories/admin_repository.dart';
+import 'package:ama_meet_admin/repositories/class_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'classes_event.dart';
 part 'classes_state.dart';
 
 class ClassesBloc extends Bloc<ClassesEvent, ClassesState> {
-  final AdminRepository repo;
-  ClassesBloc(this.repo) : super(ClassesLoading()) {
+  final ClassRepository clsRepo;
+  ClassesBloc(this.clsRepo) : super(ClassesLoading()) {
 
     on<LoadClasses>((event, emit) {
       emit(ClassesLoading());
-      repo.classStream().listen((classes){
+      clsRepo.classStream().listen((classes){
         add(ClassesUpdated(classes));
       });
     });
@@ -22,7 +22,7 @@ class ClassesBloc extends Bloc<ClassesEvent, ClassesState> {
 
     on<AddClass>((event, emit) async {
       try {
-        await repo.addClass(event.classRoom);
+        await clsRepo.addClass(event.classRoom);
       } catch (e) {
         emit(ClassesError(e.toString()));
       }
@@ -30,7 +30,7 @@ class ClassesBloc extends Bloc<ClassesEvent, ClassesState> {
 
     on<DeleteClass>((event, emit) async {
       try {
-        await repo.deleteClass(event.classId);
+        await clsRepo.deleteClass(event.classId);
       } catch (e) {
         emit(ClassesError(e.toString()));
       }

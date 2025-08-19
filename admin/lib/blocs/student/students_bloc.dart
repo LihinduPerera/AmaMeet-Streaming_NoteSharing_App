@@ -6,14 +6,14 @@ part 'students_event.dart';
 part 'students_state.dart';
 
 class StudentsBloc extends Bloc<StudentsEvent, StudentsState>{
-  final StudentRepository repo;
+  final StudentRepository stRepo;
   final String classId;
 
-  StudentsBloc(this.repo, this.classId) : super(StudentsLoading()) {
+  StudentsBloc(this.stRepo, this.classId) : super(StudentsLoading()) {
 
     on<LoadStudents>((event, emit) {
       emit(StudentsLoading());
-      repo.studentsStreamForClass(classId).listen((students){
+      stRepo.studentsStreamForClass(classId).listen((students){
         add(StudentUpdated(students));
       });
     });
@@ -24,7 +24,7 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState>{
 
     on<AddStudent>((event, emit) async {
       try {
-        await repo.addStudent(
+        await stRepo.addStudent(
           classId: classId,
           name: event.name,
           email: event.email,
@@ -37,7 +37,7 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState>{
 
     on<DeleteStudent>((event, emit) async {
       try {
-        await repo.deleteStudentByDocId(event.studentDocId);
+        await stRepo.deleteStudentByDocId(event.studentDocId);
       } catch (e) {
         emit(StudentsError(e.toString()));
       }

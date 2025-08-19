@@ -2,6 +2,7 @@ import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/class_note/class_note_bloc.dart';
 import 'package:ama_meet_admin/repositories/admin_repository.dart';
 import 'package:ama_meet_admin/repositories/class_note_repository.dart';
+import 'package:ama_meet_admin/repositories/class_repository.dart';
 import 'package:ama_meet_admin/screens/page_selection.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => ClassesBloc(AdminRepository())),
+        BlocProvider(create: (context) => ClassesBloc(ClassRepository())),
         BlocProvider(create: (context) => ClassNotesBloc(ClassNoteRepository()))
       ],
       child: MaterialApp(
