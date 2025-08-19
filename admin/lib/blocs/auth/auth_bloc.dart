@@ -1,4 +1,4 @@
-import 'package:ama_meet_admin/repositories/admin_repository.dart';
+import 'package:ama_meet_admin/repositories/admin_auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +7,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState>{
-  final AdminRepository adminRepository;
+  final AdminAuthRepository adminRepository;
   
   AuthBloc({
     required this.adminRepository
