@@ -56,6 +56,7 @@ dependencies:
   modern_player: ^0.1.0
   screen_brightness: ^1.0.1
   wakelock_plus: ^1.3.2
+  youtube_player_flutter: ^9.1.2
 
 dev_dependencies:
   flutter_test:

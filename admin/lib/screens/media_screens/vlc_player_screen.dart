@@ -5,15 +5,15 @@ import 'dart:async';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-class VideoPlayerScreen extends StatefulWidget {
+class VlcPlayerScreen extends StatefulWidget {
   final ClassVideo video;
-  const VideoPlayerScreen({super.key, required this.video});
+  const VlcPlayerScreen({super.key, required this.video});
 
   @override
-  State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
+  State<VlcPlayerScreen> createState() => _VideoPlayerScreenState();
 }
 
-class _VideoPlayerScreenState extends State<VideoPlayerScreen>
+class _VideoPlayerScreenState extends State<VlcPlayerScreen>
     with WidgetsBindingObserver {
   late VlcPlayerController _controller;
   bool _isDisposed = false;

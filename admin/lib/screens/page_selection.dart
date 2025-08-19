@@ -59,9 +59,9 @@ class _PageSelectionState extends State<PageSelection> {
             backgroundColor: buttonColor,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
-            title: const Text('Account'),
+            icon: const Icon(Icons.video_camera_front_outlined),
+            selectedIcon: const Icon(Icons.video_camera_front),
+            title: const Text('Videos'),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(

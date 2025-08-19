@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/video/video_bloc.dart';
 import 'package:ama_meet_admin/repositories/class_video_repository.dart';
-import 'package:ama_meet_admin/screens/video_player_screen.dart';
+import 'package:ama_meet_admin/screens/media_screens/vlc_player_screen.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -201,7 +201,7 @@ class _VideosPageState extends State<VideosPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (_) =>
-                                              VideoPlayerScreen(video: video)),
+                                              VlcPlayerScreen(video: video)),
                                     );
                                   },
                                 ),
