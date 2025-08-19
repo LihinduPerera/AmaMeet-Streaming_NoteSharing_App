@@ -17,6 +17,13 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   @override
+  void dispose() {
+    _idOrEmailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFeeedf2),
@@ -30,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
           }
         },
         builder: (context, state) {
+          final isLoading = state is AuthLoading;
           return SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -44,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            // Lottie animation - keep or replace if not present
                             Lottie.asset(
                               'assets/animations/hellow_world.json',
                               width: MediaQuery.of(context).size.width,
@@ -67,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: TextFormField(
                                 controller: _idOrEmailController,
                                 validator: (value) =>
-                                    value!.isEmpty ? "Enter ID or Email" : null,
+                                    value == null || value.isEmpty ? "Enter ID or Email" : null,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   label: Text("ID or Email"),
@@ -82,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: MediaQuery.of(context).size.width * .9,
                         child: TextFormField(
                           controller: _passwordController,
-                          validator: (value) => value!.length < 8
+                          validator: (value) => value == null || value.length < 8
                               ? "Password must be at least 8 characters"
                               : null,
                           obscureText: true,
@@ -97,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 60,
                         width: MediaQuery.of(context).size.width * .9,
                         child: ElevatedButton(
-                          onPressed: state is AuthLoading
+                          onPressed: isLoading
                               ? null
                               : () {
                                   if (formKey.currentState!.validate()) {
@@ -110,15 +119,66 @@ class _LoginPageState extends State<LoginPage> {
                                   }
                                 },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 219, 197, 74)
-                                .withOpacity(0.6),
+                            backgroundColor:
+                                const Color.fromARGB(255, 219, 197, 74).withOpacity(0.9),
                             foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                          child: state is AuthLoading
-                              ? const CircularProgressIndicator()
+                          child: isLoading
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
                               : const Text("Login", style: TextStyle(fontSize: 16)),
                         ),
                       ),
+                      const SizedBox(height: 12),
+                      // Beautiful Google Sign-in button
+                      SizedBox(
+                        height: 56,
+                        width: MediaQuery.of(context).size.width * .9,
+                        child: ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  context.read<AuthBloc>().add(GoogleLoginRequested());
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black87,
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            side: const BorderSide(color: Colors.grey, width: 0.5),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // If you have a local asset for Google logo replace with Image.asset
+                              // otherwise use a simple Icon
+                              Image.asset(
+                                'assets/images/google_logo.png',
+                                height: 26,
+                                width: 26,
+                                errorBuilder: (context, error, stack) {
+                                  return const Icon(Icons.login, size: 26);
+                                },
+                              ),
+                              const SizedBox(width: 12),
+                              const Text(
+                                'Sign in with Google',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // optionally: a small text to navigate to sign-up screen
                     ],
                   ),
                 ],
