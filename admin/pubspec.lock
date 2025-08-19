@@ -665,7 +665,7 @@ packages:
     source: hosted
     version: "0.28.0"
   screen_brightness:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: screen_brightness
       sha256: "7d4ac84ae26b37c01d6f5db7123a72db7933e1f2a2a8c369a51e08f81b3178d8"
@@ -1118,7 +1118,7 @@ packages:
     source: hosted
     version: "14.3.0"
   wakelock_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: wakelock_plus
       sha256: a474e314c3e8fb5adef1f9ae2d247e57467ad557fa7483a2b895bc1b421c5678

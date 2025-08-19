@@ -2,10 +2,12 @@ import 'package:ama_meet_admin/models/class_video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'dart:async';
+import 'package:screen_brightness/screen_brightness.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final ClassVideo video;
-  const VideoPlayerScreen({Key? key, required this.video}) : super(key: key);
+  const VideoPlayerScreen({super.key, required this.video});
 
   @override
   State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
@@ -23,12 +25,23 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   double playbackSpeed = 1.0;
   Map<int, String> subtitleTracks = {};
   Map<int, String> audioTracks = {};
+  double _brightness = 0.5;
+  double _volume = 1.0;
+  bool _showBrightnessOverlay = false;
+  bool _showVolumeOverlay = false;
+  Timer? _overlayTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    WakelockPlus.enable(); // Prevent screen sleep
 
+    _initializeController();
+    _fetchInitialBrightness();
+  }
+
+  void _initializeController() {
     _controller = VlcPlayerController.network(
       widget.video.url,
       autoPlay: true,
@@ -47,6 +60,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     _startHideTimer();
   }
 
+  Future<void> _fetchInitialBrightness() async {
+    try {
+      _brightness = await ScreenBrightness().current;
+      setState(() {});
+    } catch (e) {
+      // Handle error if needed
+    }
+  }
+
   void _updatePlayerState() {
     if (!_isDisposed && mounted) {
       setState(() {
@@ -54,6 +76,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
         duration = _controller.value.duration;
         isPlaying = _controller.value.isPlaying;
         playbackSpeed = _controller.value.playbackSpeed;
+        _volume = _controller.value.volume / 100.0;
       });
     }
   }
@@ -63,9 +86,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     _isDisposed = true;
     WidgetsBinding.instance.removeObserver(this);
     _hideTimer?.cancel();
+    _overlayTimer?.cancel();
     _controller.removeListener(_updatePlayerState);
     _controller.stop();
     _controller.dispose();
+    WakelockPlus.disable(); // Allow screen sleep
     super.dispose();
   }
 
@@ -194,6 +219,57 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     );
   }
 
+  void _startOverlayTimer() {
+    _overlayTimer?.cancel();
+    _overlayTimer = Timer(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          _showBrightnessOverlay = false;
+          _showVolumeOverlay = false;
+        });
+      }
+    });
+  }
+
+  Widget _buildBrightnessOverlay() {
+    return Container(
+      color: Colors.black54,
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.brightness_6, color: Colors.white),
+          const SizedBox(height: 8),
+          LinearProgressIndicator(
+            value: _brightness,
+            color: Colors.blue,
+            backgroundColor: Colors.white70,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVolumeOverlay() {
+    IconData volumeIcon = _volume == 0 ? Icons.volume_off : Icons.volume_up;
+    return Container(
+      color: Colors.black54,
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(volumeIcon, color: Colors.white),
+          const SizedBox(height: 8),
+          LinearProgressIndicator(
+            value: _volume,
+            color: Colors.blue,
+            backgroundColor: Colors.white70,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildGestures() {
     return Row(
       children: [
@@ -201,12 +277,46 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
           child: GestureDetector(
             onTap: _toggleControls,
             onDoubleTap: () => _seekRelative(-10),
+            onVerticalDragStart: (_) {
+              setState(() {
+                _showBrightnessOverlay = true;
+              });
+            },
+            onVerticalDragUpdate: (details) async {
+              double delta = -details.delta.dy / MediaQuery.of(context).size.height;
+              double newBrightness = (_brightness + delta).clamp(0.0, 1.0);
+              try {
+                await ScreenBrightness().setScreenBrightness(newBrightness);
+                setState(() {
+                  _brightness = newBrightness;
+                });
+              } catch (e) {}
+            },
+            onVerticalDragEnd: (_) {
+              _startOverlayTimer();
+            },
           ),
         ),
         Expanded(
           child: GestureDetector(
             onTap: _toggleControls,
             onDoubleTap: () => _seekRelative(10),
+            onVerticalDragStart: (_) {
+              setState(() {
+                _showVolumeOverlay = true;
+              });
+            },
+            onVerticalDragUpdate: (details) {
+              double delta = -details.delta.dy / MediaQuery.of(context).size.height;
+              double newVolume = (_volume + delta).clamp(0.0, 1.0);
+              _controller.setVolume((newVolume * 100).toInt());
+              setState(() {
+                _volume = newVolume;
+              });
+            },
+            onVerticalDragEnd: (_) {
+              _startOverlayTimer();
+            },
           ),
         ),
       ],
@@ -295,6 +405,18 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                   ),
                 ),
                 _buildGestures(),
+                if (_showBrightnessOverlay)
+                  Positioned(
+                    left: 20,
+                    top: MediaQuery.of(context).size.height / 2 - 50,
+                    child: _buildBrightnessOverlay(),
+                  ),
+                if (_showVolumeOverlay)
+                  Positioned(
+                    right: 20,
+                    top: MediaQuery.of(context).size.height / 2 - 50,
+                    child: _buildVolumeOverlay(),
+                  ),
                 if (showControls) _buildControls(),
               ],
             ),
