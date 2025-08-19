@@ -1,12 +1,12 @@
 import 'package:ama_meet_admin/models/student.dart';
-import 'package:ama_meet_admin/repositories/admin_repository.dart';
+import 'package:ama_meet_admin/repositories/student_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'students_event.dart';
 part 'students_state.dart';
 
 class StudentsBloc extends Bloc<StudentsEvent, StudentsState>{
-  final AdminRepository repo;
+  final StudentRepository repo;
   final String classId;
 
   StudentsBloc(this.repo, this.classId) : super(StudentsLoading()) {

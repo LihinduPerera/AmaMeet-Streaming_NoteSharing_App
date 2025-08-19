@@ -1,5 +1,6 @@
 import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/student/students_bloc.dart';
+import 'package:ama_meet_admin/repositories/student_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,14 +15,14 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-  late final AdminRepository _repo;
+  late final StudentRepository _stRepo;
   ClassRoom? _selectedClass;
   StudentsBloc? _studentsBloc;
 
   @override
   void initState() {
     super.initState();
-    _repo = AdminRepository();
+    _stRepo = StudentRepository();
     context.read<ClassesBloc>().add(LoadClasses());
   }
 
@@ -95,7 +96,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
               final pw = _pwCtrl.text;
               if (name.isEmpty || email.isEmpty || pw.isEmpty) return;
 
-              // ✅ Use the passed StudentsBloc
               studentsBloc.add(AddStudent(name: name, email: email, password: pw));
               Navigator.pop(context);
             },
@@ -142,7 +142,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           setState(() {
                             _selectedClass = c;
                             _studentsBloc?.close();
-                            _studentsBloc = StudentsBloc(_repo, c.id)..add(LoadStudents());
+                            _studentsBloc = StudentsBloc(_stRepo, c.id)..add(LoadStudents());
                           });
                         },
                         trailing: IconButton(
