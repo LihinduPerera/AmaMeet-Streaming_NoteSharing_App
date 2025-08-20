@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+final String GOOGLE_AUTH_CLIENT_ID = dotenv.env["GOOGLE_AUTH_CLIENT_ID"] ?? '';
 
 class AdminAuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -17,6 +20,10 @@ class AdminAuthRepository {
 
   Future<User?> signInWithGoogle() async {
     try {
+      await _googleSignIn.initialize(
+        serverClientId: GOOGLE_AUTH_CLIENT_ID,
+        // scopes: ['email'],
+      );
       final GoogleSignInAccount? gUser = await _googleSignIn.authenticate();
       if (gUser == null) return null;
 

@@ -76,10 +76,10 @@ class _LoginPageState extends State<LoginPage> {
                               child: TextFormField(
                                 controller: _idOrEmailController,
                                 validator: (value) =>
-                                    value == null || value.isEmpty ? "Enter ID or Email" : null,
+                                    value == null || value.isEmpty ? "Enter the Email" : null,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
-                                  label: Text("ID or Email"),
+                                  label: Text("Email"),
                                 ),
                               ),
                             ),
