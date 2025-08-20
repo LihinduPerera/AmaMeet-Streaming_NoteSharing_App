@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-final String GOOGLE_AUTH_CLIENT_ID = dotenv.env["GOOGLE_AUTH_CLIENT_ID"] ?? '';
+final String GOOGLE_AUTH_CLIENT_ID = dotenv.env["GOOGLE_CLIENT_ID"] ?? '';
 
 class AdminAuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;

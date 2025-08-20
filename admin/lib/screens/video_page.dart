@@ -3,7 +3,9 @@ import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/video/video_bloc.dart';
 import 'package:ama_meet_admin/repositories/class_video_repository.dart';
 import 'package:ama_meet_admin/screens/media_screens/vlc_player_screen.dart';
+import 'package:ama_meet_admin/screens/media_screens/youtube_player_screen.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
+import 'package:ama_meet_admin/models/class_video.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -137,27 +139,74 @@ class _VideosPageState extends State<VideosPage> {
                                 margin: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 8),
                                 child: ListTile(
-                                  leading: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      video.thumbnailUrl.replaceAll(
-                                          '<your-cloud-name>',
-                                          'your_cloud_name_here'),
-                                      width: 120,
-                                      height: 68,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) => Container(
-                                        width: 120,
-                                        height: 68,
-                                        color: Colors.grey[300],
-                                        child: const Icon(Icons.videocam),
+                                  leading: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Image.network(
+                                          video.thumbnailUrl,
+                                          width: 120,
+                                          height: 68,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (_, __, ___) => Container(
+                                            width: 120,
+                                            height: 68,
+                                            color: Colors.grey[300],
+                                            child: const Icon(Icons.videocam),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      // Provider indicator
+                                      Positioned(
+                                        bottom: 4,
+                                        right: 4,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            color: video.isYouTubeVideo 
+                                                ? Colors.red 
+                                                : Colors.blue,
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          child: Icon(
+                                            video.isYouTubeVideo 
+                                                ? Icons.play_arrow 
+                                                : Icons.cloud,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   title: Text(video.filename),
-                                  subtitle: Text(
-                                    "Uploaded: ${DateTime.fromMillisecondsSinceEpoch(video.uploadedAt).toString().split('.')[0]}",
-                                    style: const TextStyle(fontSize: 12),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Uploaded: ${DateTime.fromMillisecondsSinceEpoch(video.uploadedAt).toString().split('.')[0]}",
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      Text(
+                                        "Provider: ${video.isYouTubeVideo ? 'YouTube' : 'Cloudinary'}",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: video.isYouTubeVideo 
+                                              ? Colors.red 
+                                              : Colors.blue,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      if (video.isYouTubeVideo && video.youtubePrivacyStatus != null)
+                                        Text(
+                                          "Privacy: ${video.youtubePrivacyStatus!.name.toUpperCase()}",
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.orange,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                   trailing: IconButton(
                                     icon: const Icon(Icons.delete,
@@ -197,12 +246,21 @@ class _VideosPageState extends State<VideosPage> {
                                     },
                                   ),
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              VlcPlayerScreen(video: video)),
-                                    );
+                                    if (video.isYouTubeVideo) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => YouTubePlayerScreen(video: video),
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => VlcPlayerScreen(video: video),
+                                        ),
+                                      );
+                                    }
                                   },
                                 ),
                               );
@@ -241,32 +299,94 @@ class _VideosPageState extends State<VideosPage> {
     final orderController = TextEditingController(text: "1");
     final filenameController = TextEditingController();
     File? selectedFile;
+    VideoProvider selectedProvider = VideoProvider.cloudinary;
+    YouTubePrivacyStatus youtubePrivacyStatus = YouTubePrivacyStatus.unlisted;
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
-        builder: (ctx, setState) => AlertDialog(
+        builder: (ctx, setDialogState) => AlertDialog(
           title: const Text("Upload Video"),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
-                    controller: sectionController,
-                    decoration:
-                        const InputDecoration(labelText: "Section Title")),
+                  controller: sectionController,
+                  decoration: const InputDecoration(labelText: "Section Title"),
+                ),
                 const SizedBox(height: 8),
                 TextField(
-                    controller: orderController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: "Order")),
+                  controller: orderController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: "Order"),
+                ),
                 const SizedBox(height: 8),
                 TextField(
-                    controller: filenameController,
+                  controller: filenameController,
+                  decoration: const InputDecoration(labelText: "Filename (optional)"),
+                ),
+                const SizedBox(height: 16),
+                
+                // Provider selection
+                const Text("Select Upload Provider:", style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile<VideoProvider>(
+                        title: const Text("Cloudinary"),
+                        value: VideoProvider.cloudinary,
+                        groupValue: selectedProvider,
+                        onChanged: (value) {
+                          setDialogState(() {
+                            selectedProvider = value!;
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile<VideoProvider>(
+                        title: const Text("YouTube"),
+                        value: VideoProvider.youtube,
+                        groupValue: selectedProvider,
+                        onChanged: (value) {
+                          setDialogState(() {
+                            selectedProvider = value!;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                
+                // YouTube privacy settings (only show when YouTube is selected)
+                if (selectedProvider == VideoProvider.youtube) ...[
+                  const SizedBox(height: 16),
+                  const Text("YouTube Privacy Status:", style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<YouTubePrivacyStatus>(
+                    value: youtubePrivacyStatus,
                     decoration: const InputDecoration(
-                        labelText: "Filename (optional)")),
-                const SizedBox(height: 8),
+                      border: OutlineInputBorder(),
+                      labelText: "Privacy Status",
+                    ),
+                    onChanged: (value) {
+                      setDialogState(() {
+                        youtubePrivacyStatus = value!;
+                      });
+                    },
+                    items: YouTubePrivacyStatus.values.map((status) {
+                      return DropdownMenuItem(
+                        value: status,
+                        child: Text(status.name.toUpperCase()),
+                      );
+                    }).toList(),
+                  ),
+                ],
+                
+                const SizedBox(height: 16),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.upload_file),
                   label: Text(
@@ -275,7 +395,7 @@ class _VideosPageState extends State<VideosPage> {
                     final result = await FilePicker.platform
                         .pickFiles(type: FileType.video);
                     if (result != null && result.files.isNotEmpty) {
-                      setState(() {
+                      setDialogState(() {
                         selectedFile = File(result.files.single.path!);
                         if (filenameController.text.isEmpty) {
                           filenameController.text = result.files.single.name;
@@ -297,8 +417,9 @@ class _VideosPageState extends State<VideosPage> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: const Text("Cancel")),
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text("Cancel"),
+            ),
             ElevatedButton(
               onPressed: () {
                 if (selectedFile == null || _selectedClassId == null) {
@@ -306,15 +427,30 @@ class _VideosPageState extends State<VideosPage> {
                       content: Text('Select a file and a class first')));
                   return;
                 }
-                _classVideosBloc.add(UploadClassVideoEvent(
-                  classId: _selectedClassId!,
-                  file: selectedFile!,
-                  filename: filenameController.text.isEmpty
-                      ? selectedFile!.path.split('/').last
-                      : filenameController.text,
-                  sectionTitle: sectionController.text,
-                  sectionOrder: int.tryParse(orderController.text) ?? 1,
-                ));
+                
+                final filename = filenameController.text.isEmpty
+                    ? selectedFile!.path.split('/').last
+                    : filenameController.text;
+                
+                if (selectedProvider == VideoProvider.youtube) {
+                  _classVideosBloc.add(UploadClassVideoToYouTubeEvent(
+                    classId: _selectedClassId!,
+                    file: selectedFile!,
+                    filename: filename,
+                    sectionTitle: sectionController.text,
+                    sectionOrder: int.tryParse(orderController.text) ?? 1,
+                    privacyStatus: youtubePrivacyStatus,
+                  ));
+                } else {
+                  _classVideosBloc.add(UploadClassVideoToCloudinaryEvent(
+                    classId: _selectedClassId!,
+                    file: selectedFile!,
+                    filename: filename,
+                    sectionTitle: sectionController.text,
+                    sectionOrder: int.tryParse(orderController.text) ?? 1,
+                  ));
+                }
+                
                 Navigator.pop(dialogContext);
               },
               child: const Text("Upload"),

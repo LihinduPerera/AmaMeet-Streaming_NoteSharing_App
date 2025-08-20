@@ -21,10 +21,10 @@ class ClassVideosBloc extends Bloc<ClassVideosEvent, ClassVideosState> {
       }
     });
 
-    on<UploadClassVideoEvent>((event, emit) async {
+    on<UploadClassVideoToCloudinaryEvent>((event, emit) async {
       emit(ClassVideosUploadProgress(0));
       try {
-        await repository.uploadVideo(
+        await repository.uploadVideoToCloudinary(
           event.classId,
           event.file,
           event.filename,
@@ -38,7 +38,29 @@ class ClassVideosBloc extends Bloc<ClassVideosEvent, ClassVideosState> {
         final videos = await repository.getVideos(event.classId);
         emit(ClassVideosLoaded(videos));
       } catch (e) {
-        emit(ClassVideosError('Upload failed: ${e.toString()}'));
+        emit(ClassVideosError('Cloudinary upload failed: ${e.toString()}'));
+      }
+    });
+
+    on<UploadClassVideoToYouTubeEvent>((event, emit) async {
+      emit(ClassVideosUploadProgress(0));
+      try {
+        await repository.uploadVideoToYouTube(
+          event.classId,
+          event.file,
+          event.filename,
+          event.sectionTitle,
+          event.sectionOrder,
+          event.privacyStatus,
+          onUploadProgress: (sent, total) {
+            final progress = (sent / total * 100).clamp(0, 100).toInt();
+            emit(ClassVideosUploadProgress(progress));
+          },
+        );
+        final videos = await repository.getVideos(event.classId);
+        emit(ClassVideosLoaded(videos));
+      } catch (e) {
+        emit(ClassVideosError('YouTube upload failed: ${e.toString()}'));
       }
     });
 
@@ -52,5 +74,11 @@ class ClassVideosBloc extends Bloc<ClassVideosEvent, ClassVideosState> {
         emit(ClassVideosError('Delete failed: ${e.toString()}'));
       }
     });
+  }
+
+  @override
+  Future<void> close() {
+    repository.dispose();
+    return super.close();
   }
 }
