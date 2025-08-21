@@ -1,10 +1,10 @@
-import 'package:ama_meet_admin/models/class_video.dart';
+import 'package:ama_meet_admin/models/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class YouTubePlayerScreen extends StatefulWidget {
-  final ClassVideo video;
+  final VideoModel video;
   const YouTubePlayerScreen({Key? key, required this.video}) : super(key: key);
 
   @override

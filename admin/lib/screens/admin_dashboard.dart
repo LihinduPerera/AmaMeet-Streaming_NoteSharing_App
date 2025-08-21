@@ -4,7 +4,7 @@ import 'package:ama_meet_admin/repositories/student_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/classroom.dart';
+import '../models/class_model.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -15,7 +15,7 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   late final StudentRepository _stRepo;
-  ClassRoom? _selectedClass;
+  ClassModel? _selectedClass;
   StudentsBloc? _studentsBloc;
 
   @override
@@ -57,7 +57,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               final name = _nameCtrl.text.trim();
               final year = int.tryParse(_yearCtrl.text.trim()) ?? 0;
               if (id.isEmpty || name.isEmpty || year == 0) return;
-              final newClass = ClassRoom(id: id, name: name, year: year, createdAt: DateTime.now().millisecondsSinceEpoch);
+              final newClass = ClassModel(id: id, name: name, year: year, createdAt: DateTime.now().millisecondsSinceEpoch);
               context.read<ClassesBloc>().add(AddClass(newClass));
               Navigator.pop(context);
             },

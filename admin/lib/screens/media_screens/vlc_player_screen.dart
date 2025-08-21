@@ -1,4 +1,4 @@
-import 'package:ama_meet_admin/models/class_video.dart';
+import 'package:ama_meet_admin/models/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'dart:async';
@@ -6,7 +6,7 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 class VlcPlayerScreen extends StatefulWidget {
-  final ClassVideo video;
+  final VideoModel video;
   const VlcPlayerScreen({super.key, required this.video});
 
   @override

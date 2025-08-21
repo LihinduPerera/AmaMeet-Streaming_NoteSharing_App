@@ -4,7 +4,7 @@ abstract class ClassNotesState {}
 class ClassNotesInitial extends ClassNotesState {}
 class ClassNotesLoading extends ClassNotesState {}
 class ClassNotesLoaded extends ClassNotesState {
-  final List<ClassNote> notes;
+  final List<NoteModel> notes;
   ClassNotesLoaded(this.notes);
 }
 class ClassNotesError extends ClassNotesState {

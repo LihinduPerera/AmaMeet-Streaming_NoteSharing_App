@@ -1,4 +1,4 @@
-import 'package:ama_meet_admin/models/student.dart';
+import 'package:ama_meet_admin/models/student_model.dart';
 import 'package:ama_meet_admin/utils/hash.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,7 +13,7 @@ class StudentRepository {
   }) async {
     final studentId = await _generateStudentId(classId);
     final passwordHash = sha256Hash(password);
-    final student = Student(
+    final student = StudentModel(
       id: studentId,
       classId: classId,
       name: name,
@@ -25,14 +25,14 @@ class StudentRepository {
     await _firestore.collection('students').add(student.toMap());
   }
 
-  Stream<List<MapEntry<String, Student>>> studentsStreamForClass(String classId) {
+  Stream<List<MapEntry<String, StudentModel>>> studentsStreamForClass(String classId) {
     // Return list of MapEntry(docId, Student)
     return _firestore
         .collection('students')
         .where('classId', isEqualTo: classId)
         .snapshots()
         .map((snap) =>
-            snap.docs.map((doc) => MapEntry(doc.id, Student.fromMap(doc.data()))).toList());
+            snap.docs.map((doc) => MapEntry(doc.id, StudentModel.fromMap(doc.data()))).toList());
   }
 
   // Delete using doc id for now

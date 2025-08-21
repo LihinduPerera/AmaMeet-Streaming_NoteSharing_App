@@ -10,7 +10,7 @@ class ClassVideosInitial extends ClassVideosState {}
 class ClassVideosLoading extends ClassVideosState {}
 
 class ClassVideosLoaded extends ClassVideosState {
-  final List<ClassVideo> videos;
+  final List<VideoModel> videos;
   ClassVideosLoaded(this.videos);
 
   @override

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class Student extends Equatable{
+class StudentModel extends Equatable{
   final String id;
   final String classId;
   final String name;
@@ -8,7 +8,7 @@ class Student extends Equatable{
   final String passwordHash;
   final int createdAt;
 
-  const Student({
+  const StudentModel({
     required this.id,
     required this.classId,
     required this.name,
@@ -17,8 +17,8 @@ class Student extends Equatable{
     required this.createdAt,
   });
 
-  factory Student.fromMap(Map<dynamic, dynamic> m) {
-    return Student(
+  factory StudentModel.fromMap(Map<dynamic, dynamic> m) {
+    return StudentModel(
       id: m['id'] ?? '',
       classId: m['classId'] ?? '',
       name: m['name'] ?? '',

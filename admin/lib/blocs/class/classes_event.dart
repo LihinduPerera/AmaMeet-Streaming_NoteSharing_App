@@ -5,12 +5,12 @@ abstract class ClassesEvent {}
 class LoadClasses extends ClassesEvent {}
 
 class ClassesUpdated extends ClassesEvent {
-  final List<ClassRoom> classes;
+  final List<ClassModel> classes;
   ClassesUpdated(this.classes);
 }
 
 class AddClass extends ClassesEvent {
-  final ClassRoom classRoom;
+  final ClassModel classRoom;
   AddClass(this.classRoom);
 }
 

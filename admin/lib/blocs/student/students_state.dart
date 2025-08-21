@@ -5,7 +5,7 @@ abstract class StudentsState {}
 class StudentsLoading extends StudentsState {}
 
 class StudentsLoaded extends StudentsState {
-  final List<MapEntry<String, Student>> students; // docId + Student
+  final List<MapEntry<String, StudentModel>> students; // docId + Student
   StudentsLoaded(this.students);
 }
 

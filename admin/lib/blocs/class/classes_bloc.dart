@@ -1,4 +1,4 @@
-import 'package:ama_meet_admin/models/classroom.dart';
+import 'package:ama_meet_admin/models/class_model.dart';
 import 'package:ama_meet_admin/repositories/class_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

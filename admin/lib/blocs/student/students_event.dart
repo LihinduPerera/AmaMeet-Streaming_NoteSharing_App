@@ -5,7 +5,7 @@ abstract class StudentsEvent {}
 class LoadStudents extends StudentsEvent {}
 
 class StudentUpdated extends StudentsEvent {
-  final List<MapEntry<String, Student>> students; // docId + Student
+  final List<MapEntry<String, StudentModel>> students; // docId + Student
   StudentUpdated(this.students);
 }
 

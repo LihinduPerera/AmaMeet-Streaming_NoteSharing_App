@@ -5,7 +5,7 @@ abstract class ClassesState {}
 class ClassesLoading extends ClassesState {}
 
 class ClassesLoaded extends ClassesState {
-  final List<ClassRoom> classes;
+  final List<ClassModel> classes;
   ClassesLoaded(this.classes);
 }
 

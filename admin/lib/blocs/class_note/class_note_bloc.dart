@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:ama_meet_admin/models/class_note.dart';
+import 'package:ama_meet_admin/models/note_model.dart';
 import 'package:ama_meet_admin/repositories/class_note_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +10,7 @@ part 'class_note_state.dart';
 
 class ClassNotesBloc extends Bloc<ClassNotesEvent, ClassNotesState> {
   final ClassNoteRepository _repo;
-  StreamSubscription<List<ClassNote>>? _notesSub;
+  StreamSubscription<List<NoteModel>>? _notesSub;
 
   ClassNotesBloc(this._repo) : super(ClassNotesInitial()) {
     on<LoadClassNotes>(_onLoad);
@@ -78,7 +78,7 @@ class ClassNotesBloc extends Bloc<ClassNotesEvent, ClassNotesState> {
 
 // Internal events used only inside the bloc
 class _ClassNotesUpdated extends ClassNotesEvent {
-  final List<ClassNote> notes;
+  final List<NoteModel> notes;
   _ClassNotesUpdated(this.notes);
 }
 

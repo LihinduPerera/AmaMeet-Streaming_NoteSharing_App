@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../models/class_video.dart';
+import '../models/video_model.dart';
 import '../services/youtube_service.dart';
 
 final String CLOUDINARY_CLOUD_NAME = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
@@ -15,7 +15,7 @@ class ClassVideoRepository {
   final cloudinary =
       CloudinaryPublic(CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET_VIDEO, cache: false);
 
-  Future<List<ClassVideo>> getVideos(String classId) async {
+  Future<List<VideoModel>> getVideos(String classId) async {
     try {
       final snapshot = await _firestore
           .collection('classes')
@@ -23,7 +23,7 @@ class ClassVideoRepository {
           .collection('videos')
           .orderBy('sectionOrder')
           .get();
-      return snapshot.docs.map((doc) => ClassVideo.fromFirestore(doc)).toList();
+      return snapshot.docs.map((doc) => VideoModel.fromFirestore(doc)).toList();
     } catch (e) {
       throw Exception('Failed to fetch videos: $e');
     }

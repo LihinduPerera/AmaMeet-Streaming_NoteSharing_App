@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:ama_meet_admin/models/class_note.dart';
+import 'package:ama_meet_admin/models/note_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,7 +15,7 @@ final String CLOUDINARY_UPLOAD_PRESET_NOTE = dotenv.env['CLOUDINARY_UPLOAD_PRESE
 class ClassNoteRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
-  Stream<List<ClassNote>> notesStreamForClass(String classId) {
+  Stream<List<NoteModel>> notesStreamForClass(String classId) {
     return _firestore
         .collection('class_notes')
         .where('classId', isEqualTo: classId)
@@ -23,7 +23,7 @@ class ClassNoteRepository {
         .orderBy('uploadedAt', descending: false)
         .snapshots()
         .map((snap) => snap.docs
-            .map((d) => ClassNote.fromMap(d.id, d.data() as Map<String, dynamic>))
+            .map((d) => NoteModel.fromMap(d.id, d.data() as Map<String, dynamic>))
             .toList());
   }
 

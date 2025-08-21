@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:googleapis/youtube/v3.dart' as youtube;
-import '../models/class_video.dart';
+import '../models/video_model.dart';
 
 /// Mobile YouTube helper:
 /// - Uses google_sign_in for OAuth on device (youtube.upload scope)

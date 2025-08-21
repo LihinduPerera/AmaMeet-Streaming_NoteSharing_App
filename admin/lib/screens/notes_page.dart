@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/class_note/class_note_bloc.dart';
-import 'package:ama_meet_admin/models/class_note.dart';
+import 'package:ama_meet_admin/models/note_model.dart';
 import 'package:ama_meet_admin/repositories/class_note_repository.dart';
 import 'package:ama_meet_admin/screens/media_screens/pdf_viewer_screen.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
@@ -24,7 +24,7 @@ class _NotesPageState extends State<NotesPage> {
 
   String? _selectedClassId;
   String? _selectedClassName;
-  Map<String, List<ClassNote>> _groupedNotes = {};
+  Map<String, List<NoteModel>> _groupedNotes = {};
 
   @override
   void initState() {
@@ -199,8 +199,8 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  Map<String, List<ClassNote>> _groupNotesBySection(List<ClassNote> notes) {
-    final Map<String, List<ClassNote>> grouped = {};
+  Map<String, List<NoteModel>> _groupNotesBySection(List<NoteModel> notes) {
+    final Map<String, List<NoteModel>> grouped = {};
     for (final note in notes) {
       final section = (note.sectionTitle?.trim().isEmpty ?? true)
           ? 'Uncategorized'
@@ -214,7 +214,7 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   Widget _buildNotesContent(
-      BuildContext context, Map<String, List<ClassNote>> groupedNotes) {
+      BuildContext context, Map<String, List<NoteModel>> groupedNotes) {
     if (groupedNotes.isEmpty) {
       return Center(
         child: Column(
@@ -270,7 +270,7 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  Widget _buildNoteListTile(BuildContext context, ClassNote note) {
+  Widget _buildNoteListTile(BuildContext context, NoteModel note) {
     return ListTile(
       leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
       title: Text(note.filename),
@@ -300,7 +300,7 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  void _viewPdf(BuildContext context, ClassNote note) {
+  void _viewPdf(BuildContext context, NoteModel note) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => PdfViewerScreen(note: note),
@@ -432,7 +432,7 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  void _showUpdateNoteDialog(BuildContext context, ClassNote note) {
+  void _showUpdateNoteDialog(BuildContext context, NoteModel note) {
     final filenameController = TextEditingController(text: note.filename);
     final sectionController = TextEditingController(text: note.sectionTitle);
     final orderController =
@@ -573,7 +573,7 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, ClassNote note) {
+  void _showDeleteConfirmation(BuildContext context, NoteModel note) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(

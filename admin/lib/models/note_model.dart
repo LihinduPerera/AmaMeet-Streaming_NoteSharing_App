@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class ClassNote extends Equatable {
+class NoteModel extends Equatable {
   final String docId;
   final String classId;
   final String filename;
@@ -10,7 +10,7 @@ class ClassNote extends Equatable {
   final String sectionTitle; // New field for lesson/section title
   final int sectionOrder; // New field for ordering sections
 
-  const ClassNote({
+  const NoteModel({
     required this.docId,
     required this.classId,
     required this.filename,
@@ -21,8 +21,8 @@ class ClassNote extends Equatable {
     required this.sectionOrder,
   });
 
-  factory ClassNote.fromMap(String docId, Map<String, dynamic> m) {
-    return ClassNote(
+  factory NoteModel.fromMap(String docId, Map<String, dynamic> m) {
+    return NoteModel(
       docId: docId,
       classId: m['classId'] ?? '',
       filename: m['filename'] ?? '',

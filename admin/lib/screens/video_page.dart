@@ -5,7 +5,7 @@ import 'package:ama_meet_admin/repositories/class_video_repository.dart';
 import 'package:ama_meet_admin/screens/media_screens/vlc_player_screen.dart';
 import 'package:ama_meet_admin/screens/media_screens/youtube_player_screen.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
-import 'package:ama_meet_admin/models/class_video.dart';
+import 'package:ama_meet_admin/models/video_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

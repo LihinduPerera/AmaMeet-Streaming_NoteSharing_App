@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum VideoProvider { cloudinary, youtube }
 enum YouTubePrivacyStatus { private, public, unlisted }
 
-class ClassVideo {
+class VideoModel {
   final String id;
   final String filename;
   final String publicId;
@@ -15,7 +15,7 @@ class ClassVideo {
   final YouTubePrivacyStatus? youtubePrivacyStatus;
   final String? youtubeVideoId;
 
-  ClassVideo({
+  VideoModel({
     required this.id,
     required this.filename,
     required this.publicId,
@@ -28,9 +28,9 @@ class ClassVideo {
     this.youtubeVideoId,
   });
 
-  factory ClassVideo.fromFirestore(DocumentSnapshot doc) {
+  factory VideoModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return ClassVideo(
+    return VideoModel(
       id: doc.id,
       filename: data['filename'] as String,
       publicId: data['publicId'] as String,

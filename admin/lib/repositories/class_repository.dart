@@ -1,10 +1,10 @@
-import 'package:ama_meet_admin/models/classroom.dart';
+import 'package:ama_meet_admin/models/class_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClassRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> addClass(ClassRoom cr) async {
+  Future<void> addClass(ClassModel cr) async {
     final docRef = _firestore.collection('classes').doc(cr.id);
     await docRef.set(cr.toMap());
   }
@@ -25,8 +25,8 @@ class ClassRepository {
     await _firestore.collection('counters').doc(classId).delete();
   }
 
-  Stream<List<ClassRoom>> classStream() {
+  Stream<List<ClassModel>> classStream() {
     return _firestore.collection('classes').snapshots().map((snap) =>
-      snap.docs.map((doc) => ClassRoom.fromMap(doc.data())).toList());
+      snap.docs.map((doc) => ClassModel.fromMap(doc.data())).toList());
   }
 }
