@@ -79,6 +79,7 @@ class YouTubeService {
         video,
         ['snippet', 'status'],
         uploadMedia: media,
+        uploadOptions: youtube.UploadOptions.resumable,
       );
 
       return response.id;
