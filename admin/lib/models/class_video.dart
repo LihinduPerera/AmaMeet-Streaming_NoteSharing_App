@@ -36,8 +36,8 @@ class ClassVideo {
       publicId: data['publicId'] as String,
       url: data['url'] as String,
       sectionTitle: data['sectionTitle'] as String,
-      sectionOrder: data['sectionOrder'] as int,
-      uploadedAt: data['uploadedAt'] as int,
+      sectionOrder: (data['sectionOrder'] as num).toInt(),
+      uploadedAt: (data['uploadedAt'] as num).toInt(),
       provider: VideoProvider.values.firstWhere(
         (e) => e.toString() == 'VideoProvider.${data['provider'] ?? 'cloudinary'}',
         orElse: () => VideoProvider.cloudinary,
@@ -64,7 +64,7 @@ class ClassVideo {
 
   String get hlsUrl {
     if (provider == VideoProvider.youtube) {
-      return url; // YouTube URL for youtube_player_flutter
+      return url; // YouTube URL for youtube_player packages
     }
     if (url.endsWith('.m3u8')) return url;
     return url.replaceAll(RegExp(r'\.\w+$'), '.m3u8');

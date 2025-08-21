@@ -8,7 +8,9 @@ final String GOOGLE_AUTH_CLIENT_ID = dotenv.env["GOOGLE_CLIENT_ID"] ?? '';
 class AdminAuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
 
   Future<User?> signIn(String email, String password) async {
     final cred = await _auth.signInWithEmailAndPassword(
@@ -20,21 +22,21 @@ class AdminAuthRepository {
 
   Future<User?> signInWithGoogle() async {
     try {
-      await _googleSignIn.initialize(
-        serverClientId: GOOGLE_AUTH_CLIENT_ID,
-        // scopes: ['email'],
-      );
-      final GoogleSignInAccount? gUser = await _googleSignIn.authenticate();
+      final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
       if (gUser == null) return null;
 
       final GoogleSignInAuthentication gAuth = await gUser.authentication;
       final String? idToken = gAuth.idToken;
+      final String? accessToken = gAuth.accessToken;
 
       if (idToken == null) {
         throw Exception("Failed to retrieve idToken from GoogleSignIn");
       }
 
-      final credential = GoogleAuthProvider.credential(idToken: idToken);
+      final credential = GoogleAuthProvider.credential(
+        idToken: idToken,
+        accessToken: accessToken,
+      );
 
       final userCred = await _auth.signInWithCredential(credential);
       final user = userCred.user;

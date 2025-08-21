@@ -74,26 +74,19 @@ class ClassVideoRepository {
     Function(int sent, int total)? onUploadProgress,
   }) async {
     try {
-      // Authenticate with YouTube
-      final authenticated = await _youtubeService.authenticate();
-      if (!authenticated) {
-        throw Exception('YouTube authentication failed');
-      }
-
-      // Upload to YouTube
+      // Sign in & upload (mobile flow)
       final videoId = await _youtubeService.uploadVideo(
         videoFile: file,
         title: '$sectionTitle - $filename',
         description: 'Class recording: $sectionTitle',
         privacyStatus: privacyStatus,
-        onProgress: onUploadProgress,
       );
 
       if (videoId == null) {
         throw Exception('Failed to get YouTube video ID');
       }
 
-      final youtubeUrl = _youtubeService.getVideoUrl(videoId);
+      final youtubeUrl = 'https://www.youtube.com/watch?v=$videoId';
 
       // Save to Firestore
       await _firestore
@@ -127,15 +120,16 @@ class ClassVideoRepository {
           .get();
 
       if (doc.exists) {
+        // Save doc details if you need to know provider
         final data = doc.data();
         final provider = data?['provider'] ?? 'cloudinary';
-        
+
         // Delete from Firestore
         await doc.reference.delete();
 
-        // Note: For production, you should implement server-side deletion
-        // For Cloudinary: Use Admin API to delete the resource
-        // For YouTube: Use YouTube API to delete the video (if needed)
+        // NOTE: In production implement server-side deletion:
+        // - Cloudinary: call Admin API with your server API key (don't embed it in the app)
+        // - YouTube: call YouTube Data API (requires credentials & proper auth)
       }
     } catch (e) {
       throw Exception('Video deletion failed: $e');
@@ -143,6 +137,6 @@ class ClassVideoRepository {
   }
 
   void dispose() {
-    _youtubeService.dispose();
+    _youtubeService.signOut();
   }
 }
