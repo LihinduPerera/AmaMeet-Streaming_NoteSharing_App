@@ -1,14 +1,14 @@
 import 'dart:convert';
-import 'package:ama_meet/models/student.dart';
+import 'package:ama_meet/models/student_model.dart';
 import 'package:ama_meet/utils/hash.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class StudentRepository {
+class AuthRepository {
   final _firestore = FirebaseFirestore.instance;
   final _storage = const FlutterSecureStorage();
 
-  Future<Student?> loginWithIdOrEmail(String idOrEmail, String password) async {
+  Future<StudentModel?> loginWithIdOrEmail(String idOrEmail, String password) async {
     try {
       final hash = sha256Hash(password);
 
@@ -28,7 +28,7 @@ class StudentRepository {
         throw Exception("Student not found with ID/Email: $idOrEmail");
       }
 
-      final student = Student.fromMap(querySnap.docs.first.data());
+      final student = StudentModel.fromMap(querySnap.docs.first.data());
       if (student.passwordHash != hash) {
         throw Exception("Incorrect password.");
       }
@@ -41,14 +41,14 @@ class StudentRepository {
     }
   }
 
-  Future<Student?> getSavedStudent() async {
+  Future<StudentModel?> getSavedStudent() async {
     try {
       final data = await _storage.read(key: 'student');
       if (data == null) return null;
 
       // Parse JSON string back to Map
       final map = jsonDecode(data) as Map<String, dynamic>;
-      return Student.fromMap(map);
+      return StudentModel.fromMap(map);
     } catch (e) {
       throw Exception("Failed to fetch saved student: ${e.toString()}");
     }

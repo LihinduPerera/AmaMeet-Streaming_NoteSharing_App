@@ -18,7 +18,7 @@ class NoteModel extends Equatable {
     required this.publicId,
     required this.uploadedAt,
     required this.sectionTitle,
-    required this.sectionOrder,
+    required this.sectionOrder
   });
 
   factory NoteModel.fromMap(String docId, Map<String, dynamic> m) {
@@ -35,16 +35,16 @@ class NoteModel extends Equatable {
   }
 
   Map<String, dynamic> toMap() => {
-        'classId': classId,
-        'filename': filename,
-        'url': url,
-        'publicId': publicId,
-        'uploadedAt': uploadedAt,
-        'sectionTitle': sectionTitle,
-        'sectionOrder': sectionOrder,
-      };
+    'classId': classId,
+    'filename': filename,
+    'url': url,
+    'publicId': publicId,
+    'uploadedAt': uploadedAt,
+    'sectionTitle': sectionTitle,
+    'sectionOrder': sectionOrder,
+  };
 
-  @override
+ @override
   List<Object?> get props => [
         docId,
         classId,

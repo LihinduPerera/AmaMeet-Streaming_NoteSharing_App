@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:ama_meet_admin/models/note_model.dart';
-import 'package:ama_meet_admin/repositories/class_note_repository.dart';
+import 'package:ama_meet_admin/repositories/note_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'class_note_event.dart';
 part 'class_note_state.dart';
 
 class ClassNotesBloc extends Bloc<ClassNotesEvent, ClassNotesState> {
-  final ClassNoteRepository _repo;
+  final NoteRepository _repo;
   StreamSubscription<List<NoteModel>>? _notesSub;
 
   ClassNotesBloc(this._repo) : super(ClassNotesInitial()) {

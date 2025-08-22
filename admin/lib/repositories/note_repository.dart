@@ -12,7 +12,7 @@ final String CLOUDINARY_UPLOAD_PRESET_NOTE = dotenv.env['CLOUDINARY_UPLOAD_PRESE
 
 // **Remember to turn on PDF and ZIP files delivery:	Allow delivery of PDF and ZIP files in cloudinary security settings!!!**
 
-class ClassNoteRepository {
+class NoteRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
   Stream<List<NoteModel>> notesStreamForClass(String classId) {

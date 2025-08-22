@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:ama_meet_admin/models/note_model.dart';
-import 'package:ama_meet_admin/repositories/class_note_repository.dart';
+import 'package:ama_meet_admin/repositories/note_repository.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -20,7 +20,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   String? _error;
   File? _localFile;
 
-  final ClassNoteRepository _repo = ClassNoteRepository();
+  final NoteRepository _repo = NoteRepository();
 
   @override
   void initState() {

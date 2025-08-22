@@ -8,7 +8,7 @@ import '../services/youtube_service.dart';
 final String CLOUDINARY_CLOUD_NAME = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
 final String CLOUDINARY_UPLOAD_PRESET_VIDEO = dotenv.env['CLOUDINARY_UPLOAD_PRESET_VIDEO'] ?? '';
 
-class ClassVideoRepository {
+class VideoRepository {
   final _firestore = FirebaseFirestore.instance;
   final _youtubeService = YouTubeService();
 

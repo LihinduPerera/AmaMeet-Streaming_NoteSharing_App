@@ -10,7 +10,7 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
-  final Student student;
+  final StudentModel student;
   AuthAuthenticated(this.student);
 
   @override

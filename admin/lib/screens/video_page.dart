@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/video/video_bloc.dart';
-import 'package:ama_meet_admin/repositories/class_video_repository.dart';
+import 'package:ama_meet_admin/repositories/video_repository.dart';
 import 'package:ama_meet_admin/screens/media_screens/vlc_player_screen.dart';
 import 'package:ama_meet_admin/screens/media_screens/youtube_player_screen.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
@@ -18,7 +18,7 @@ class VideosPage extends StatefulWidget {
 }
 
 class _VideosPageState extends State<VideosPage> {
-  final ClassVideoRepository _videoRepo = ClassVideoRepository();
+  final VideoRepository _videoRepo = VideoRepository();
   late final ClassVideosBloc _classVideosBloc;
 
   String? _selectedClassId;

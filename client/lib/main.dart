@@ -1,4 +1,4 @@
-import 'package:ama_meet/repositories/student_repository.dart';
+import 'package:ama_meet/repositories/auth_repository.dart';
 import 'package:ama_meet/screens/login_page.dart';
 import 'package:ama_meet/screens/page_selection.dart';
 import 'package:ama_meet/utils/colors.dart';
@@ -20,10 +20,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (_) => StudentRepository(),
+      create: (_) => AuthRepository(),
       child: BlocProvider(
         create: (context) =>
-            AuthBloc(context.read<StudentRepository>())..add(AppStarted()),
+            AuthBloc(context.read<AuthRepository>())..add(AppStarted()),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Ama Meet',

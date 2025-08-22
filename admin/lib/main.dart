@@ -2,7 +2,7 @@ import 'package:ama_meet_admin/blocs/auth/auth_bloc.dart';
 import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/class_note/class_note_bloc.dart';
 import 'package:ama_meet_admin/repositories/admin_auth_repository.dart';
-import 'package:ama_meet_admin/repositories/class_note_repository.dart';
+import 'package:ama_meet_admin/repositories/note_repository.dart';
 import 'package:ama_meet_admin/repositories/class_repository.dart';
 import 'package:ama_meet_admin/screens/login_page.dart';
 import 'package:ama_meet_admin/screens/page_selection.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => ClassesBloc(ClassRepository())),
-        BlocProvider(create: (context) => ClassNotesBloc(ClassNoteRepository())),
+        BlocProvider(create: (context) => ClassNotesBloc(NoteRepository())),
         BlocProvider(
           create: (context) {
             final authBloc = AuthBloc(adminRepository: AdminAuthRepository());

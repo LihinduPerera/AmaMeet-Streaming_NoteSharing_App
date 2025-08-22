@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:ama_meet_admin/blocs/class/classes_bloc.dart';
 import 'package:ama_meet_admin/blocs/class_note/class_note_bloc.dart';
 import 'package:ama_meet_admin/models/note_model.dart';
-import 'package:ama_meet_admin/repositories/class_note_repository.dart';
+import 'package:ama_meet_admin/repositories/note_repository.dart';
 import 'package:ama_meet_admin/screens/media_screens/pdf_viewer_screen.dart';
 import 'package:ama_meet_admin/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  final ClassNoteRepository _noteRepo = ClassNoteRepository();
+  final NoteRepository _noteRepo = NoteRepository();
 
   // Single bloc instance for the page lifecycle
   late final ClassNotesBloc _classNotesBloc;
