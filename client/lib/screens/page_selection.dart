@@ -1,6 +1,5 @@
-import 'package:ama_meet/screens/account_page.dart';
-import 'package:ama_meet/screens/meeting_page.dart';
-import 'package:ama_meet/screens/note_page.dart';
+import 'package:ama_meet/screens/account_screen.dart';
+import 'package:ama_meet/screens/meeting_screen.dart';
 import 'package:ama_meet/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
@@ -16,9 +15,9 @@ class _PageSelectionState extends State<PageSelection> {
   int _page = 0;
 
   final List<Widget> pages = [
-    const Meetingpage(),
-    const NotePage(),
-    const AccountPage()
+    const MeetingScreen(),
+    const Center(child: Text("page"),),
+    const AccountScreen()
   ];
 
   @override

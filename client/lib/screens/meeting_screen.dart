@@ -2,8 +2,8 @@ import 'package:ama_meet/controllers/jitsi_meet_controller.dart';
 import 'package:ama_meet/widgets/home_btn_widget.dart';
 import 'package:flutter/material.dart';
 
-class Meetingpage extends StatelessWidget {
-  const Meetingpage({super.key});
+class MeetingScreen extends StatelessWidget {
+  const MeetingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

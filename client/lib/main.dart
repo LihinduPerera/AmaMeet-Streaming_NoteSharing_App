@@ -1,5 +1,5 @@
 import 'package:ama_meet/repositories/auth_repository.dart';
-import 'package:ama_meet/screens/login_page.dart';
+import 'package:ama_meet/screens/login_screen.dart';
 import 'package:ama_meet/screens/page_selection.dart';
 import 'package:ama_meet/utils/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           ),
           home: const AuthWrapper(),
           routes: {
-            '/login': (context) => const LoginPage(),
+            '/login': (context) => const LoginScreen(),
             '/pageSelection': (context) => const PageSelection(),
           },
         ),
@@ -69,7 +69,7 @@ class AuthWrapper extends StatelessWidget {
           } else if (state is AuthAuthenticated) {
             return const PageSelection();
           } else {
-            return const LoginPage();
+            return const LoginScreen();
           }
         },
       ),
