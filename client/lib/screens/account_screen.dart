@@ -19,27 +19,49 @@ class AccountScreen extends StatelessWidget {
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is AuthAuthenticated) {
+            final student = state.student;
+
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Spacer(),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(LogoutRequested());
-                        Navigator.of(context)
-                            .pushReplacementNamed('/login');
-                      },
-                      icon: const Icon(Icons.logout, color: Colors.white),
-                      label: const Text(
-                        "Sign Out",
-                        style: TextStyle(color: Colors.white),
+                    const SizedBox(height: 32),
+                    Center(
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey[400],
+                        child: Text(
+                          student.name.isNotEmpty ? student.name[0].toUpperCase() : '?',
+                          style: const TextStyle(fontSize: 40, color: Colors.white),
+                        ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
-                        backgroundColor: buttonColor,
+                    ),
+                    const SizedBox(height: 32),
+                    infoTile("Name", student.name),
+                    const SizedBox(height: 16),
+                    infoTile("Email", student.email),
+                    const SizedBox(height: 16),
+                    infoTile("Class ID", student.classId),
+                    const Spacer(),
+                    Center(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          context.read<AuthBloc>().add(LogoutRequested());
+                          Navigator.of(context)
+                              .pushReplacementNamed('/login');
+                        },
+                        icon: const Icon(Icons.logout, color: Colors.white),
+                        label: const Text(
+                          "Sign Out",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          backgroundColor: buttonColor,
+                        ),
                       ),
                     ),
                   ],
@@ -53,6 +75,28 @@ class AccountScreen extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+
+  Widget infoTile(String title, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Colors.black87,
+            )),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.black54,
+          ),
+        ),
+      ],
     );
   }
 }

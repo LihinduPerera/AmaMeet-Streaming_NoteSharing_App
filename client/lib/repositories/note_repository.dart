@@ -14,6 +14,7 @@ class NoteRepository {
         .collection('class_notes')
         .where('classId', isEqualTo: classId)
         .orderBy('sectionOrder', descending: false)
+        .orderBy('uploadedAt', descending: false)
         .snapshots()
         .map((snap) => snap.docs
             .map((d) => NoteModel.fromMap(d.id, d.data() as Map<String, dynamic>))

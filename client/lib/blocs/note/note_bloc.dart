@@ -14,7 +14,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState>{
   NoteBloc(this._repo) : super(NotesInitial()) {
     on<LoadNotes>(_onLoad);
     on<_NotesUpdated>((event, emit) => emit(NotesLoaded(event.notes)));
-    on<_NotesError>((event, emit) => (NotesError(event.message)));
+    on<_NotesError>((event, emit) => emit(NotesError(event.message)));
   }
 
   Future<void> _onLoad(LoadNotes event, Emitter emit) async {
