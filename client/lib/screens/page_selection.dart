@@ -1,4 +1,5 @@
 import 'package:ama_meet/screens/account_screen.dart';
+import 'package:ama_meet/screens/landing_screen/landing_screen.dart';
 import 'package:ama_meet/screens/meeting_screen.dart';
 import 'package:ama_meet/screens/note_screen.dart';
 import 'package:ama_meet/utils/colors.dart';
@@ -18,7 +19,8 @@ class _PageSelectionState extends State<PageSelection> {
   final List<Widget> pages = [
     const MeetingScreen(),
     const NoteScreen(),
-    const AccountScreen()
+    const AccountScreen(),
+    const Text("page"),
   ];
 
   @override
@@ -55,6 +57,12 @@ class _PageSelectionState extends State<PageSelection> {
             icon: const Icon(Icons.note_alt_outlined),
             selectedIcon: const Icon(Icons.note_alt),
             title: const Text('Notes'),
+            backgroundColor: buttonColor,
+          ),
+          BottomBarItem(
+            icon: const Icon(Icons.person_outline),
+            selectedIcon: const Icon(Icons.person),
+            title: const Text('Account'),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(

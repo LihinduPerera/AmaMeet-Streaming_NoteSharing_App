@@ -1,6 +1,7 @@
 import 'package:ama_meet/blocs/note/note_bloc.dart';
 import 'package:ama_meet/repositories/auth_repository.dart';
 import 'package:ama_meet/repositories/note_repository.dart';
+import 'package:ama_meet/screens/landing_screen/landing_screen.dart';
 import 'package:ama_meet/screens/login_screen.dart';
 import 'package:ama_meet/screens/page_selection.dart';
 import 'package:ama_meet/utils/colors.dart';
@@ -76,7 +77,8 @@ class AuthWrapper extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (state is AuthAuthenticated) {
-            return const PageSelection();
+            // return const PageSelection();
+            return const LandingScreen();
           } else {
             return const LoginScreen();
           }

@@ -51,6 +51,8 @@ dependencies:
   path: ^1.9.0
   path_provider: ^2.1.5
   http: ^1.5.0
+  rive: ^0.13.20
+  flutter_svg: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +80,9 @@ flutter:
     - assets/
     - assets/animations/
     - assets/images/
+    - assets/icons/
+    - assets/rive/
+    - assets/backgrounds/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -97,6 +102,11 @@ flutter:
   # example:
 
   fonts:
+    - family: Intel
+      fonts:
+        - asset: fonts/Inter-Regular.ttf
+        - asset: fonts/Inter-SemiBold.ttf
+          weight: 600
     - family: Poppins
       fonts:
         - asset: fonts/Poppins-Bold.ttf
@@ -107,6 +117,7 @@ flutter:
           weight: 400
         - asset: fonts/Poppins-semiBold.ttf
           weight: 600
+
   # fonts:
   #   - family: Schyler
   #     fonts:
