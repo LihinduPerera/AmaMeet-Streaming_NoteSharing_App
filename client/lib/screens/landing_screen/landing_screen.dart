@@ -12,11 +12,15 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
+  late rive.RiveAnimationController _btnClickAnimationController;
   late rive.RiveAnimationController _btnAnimationController;
   @override
   void initState() {
-    _btnAnimationController = rive.OneShotAnimation(
-      "active",
+    _btnAnimationController = rive.SimpleAnimation(
+      "Timeline 1"
+    );
+    _btnClickAnimationController = rive.OneShotAnimation(
+      "click",
       autoplay: false,
     );
     super.initState();
@@ -79,8 +83,9 @@ class _LandingScreenState extends State<LandingScreen> {
                   const Spacer(flex: 2,),
                   AnimatedBtn(
                     btnAnimationController: _btnAnimationController,
+                    btnClickAnimationController: _btnClickAnimationController,
                     onPress: () {
-                      _btnAnimationController.isActive = true;
+                      _btnClickAnimationController.isActive = true;
                     },
                   ),
                   Padding(
