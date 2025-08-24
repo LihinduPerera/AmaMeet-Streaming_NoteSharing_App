@@ -16,12 +16,13 @@ class _LandingScreenState extends State<LandingScreen> {
   late rive.RiveAnimationController _btnAnimationController;
   @override
   void initState() {
-    _btnAnimationController = rive.SimpleAnimation(
-      "Timeline 1"
-    );
+    _btnAnimationController = rive.SimpleAnimation("Timeline 1");
     _btnClickAnimationController = rive.OneShotAnimation(
       "click",
       autoplay: false,
+      onStop: () {
+        _btnClickAnimationController.isActive = false;
+      },
     );
     super.initState();
   }
@@ -35,14 +36,12 @@ class _LandingScreenState extends State<LandingScreen> {
               width: MediaQuery.of(context).size.width * 1.7,
               left: 100,
               bottom: 200,
-              child: Image.asset("assets/backgrounds/spline.png")
-              ),
-          
-          rive.RiveAnimation.asset("assets/rive/shapes.riv"),
+              child: Image.asset("assets/backgrounds/spline.png")),
+          rive.RiveAnimation.asset("assets/rive/amameet_background.riv"),
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(
-                sigmaX: 30,
+                sigmaX: 45,
                 sigmaY: 25,
               ),
               child: SizedBox(),
@@ -60,10 +59,10 @@ class _LandingScreenState extends State<LandingScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 130,
-                          width: 330,
-                          child: rive.RiveAnimation.asset("assets/rive/amameet.riv")
-                          ),
+                            height: 130,
+                            width: 330,
+                            child: rive.RiveAnimation.asset(
+                                "assets/rive/amameet.riv")),
                         Text(
                           "Connected & Organized",
                           style: TextStyle(
@@ -80,12 +79,16 @@ class _LandingScreenState extends State<LandingScreen> {
                       ],
                     ),
                   ),
-                  const Spacer(flex: 2,),
+                  const Spacer(
+                    flex: 2,
+                  ),
                   AnimatedBtn(
                     btnAnimationController: _btnAnimationController,
                     btnClickAnimationController: _btnClickAnimationController,
                     onPress: () {
-                      _btnClickAnimationController.isActive = true;
+                      if (!_btnClickAnimationController.isActive) {
+                        _btnClickAnimationController.isActive = true;
+                      }
                     },
                   ),
                   Padding(

@@ -23,33 +23,33 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-  create: (_) => AuthRepository(),
-  child: MultiBlocProvider(
-    providers: [
-      BlocProvider(
-        create: (context) =>
-            AuthBloc(context.read<AuthRepository>())..add(AppStarted()),
+      create: (_) => AuthRepository(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                AuthBloc(context.read<AuthRepository>())..add(AppStarted()),
+          ),
+          BlocProvider(
+            create: (context) => NoteBloc(NoteRepository()),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Ama Meet',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: buttonColor),
+            useMaterial3: true,
+            fontFamily: 'Poppins',
+          ),
+          home: const AuthWrapper(),
+          routes: {
+            '/login': (context) => const LoginScreen(),
+            '/pageSelection': (context) => const PageSelection(),
+          },
+        ),
       ),
-      BlocProvider(
-        create: (context) => NoteBloc(NoteRepository()),
-      ),
-    ],
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Ama Meet',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: buttonColor),
-        useMaterial3: true,
-        fontFamily: 'Poppins',
-      ),
-      home: const AuthWrapper(),
-      routes: {
-        '/login': (context) => const LoginScreen(),
-        '/pageSelection': (context) => const PageSelection(),
-      },
-    ),
-  ),
-);
+    );
   }
 }
 
