@@ -27,12 +27,15 @@ class _PageSelectionState extends State<PageSelection> {
     return Scaffold(
   body: pages[_page],
   bottomNavigationBar: SizedBox(
-    height: 80,
-    child: Center(
+    height: 95,
+    child: Padding(
+      padding: EdgeInsets.all(10),
       child: StylishBottomBar(
         borderRadius: BorderRadius.all(Radius.circular(25)),
         backgroundColor: const Color(0xFF252525),
         option: BubbleBarOptions(
+          // padding: EdgeInsets.symmetric(vertical: 10),
+          // opacity: 0.4,
           barStyle: BubbleBarStyle.horizontal,
           bubbleFillStyle: BubbleFillStyle.fill,
         ),
@@ -44,25 +47,25 @@ class _PageSelectionState extends State<PageSelection> {
         },
         items: [
           BottomBarItem(
-            icon: const Icon(Icons.linked_camera_outlined, color: Colors.black54),
+            icon: const Icon(Icons.linked_camera_outlined, color: Colors.grey),
             selectedIcon: const Icon(Icons.linked_camera, color: Colors.white),
             title: const Text('Live Class', style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.note_alt_outlined, color: Colors.black54),
+            icon: const Icon(Icons.note_alt_outlined, color: Colors.grey),
             selectedIcon: const Icon(Icons.note_alt, color: Colors.white),
             title: const Text('Notes', style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.person_outline, color: Colors.black54),
+            icon: const Icon(Icons.person_outline, color: Colors.grey),
             selectedIcon: const Icon(Icons.person, color: Colors.white),
             title: const Text('Account', style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.settings, color: Colors.black54),
+            icon: const Icon(Icons.settings, color: Colors.grey),
             selectedIcon: const Icon(Icons.settings, color: Colors.white),
             title: const Text('Settings', style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,

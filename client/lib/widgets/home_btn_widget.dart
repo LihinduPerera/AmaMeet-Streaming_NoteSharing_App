@@ -24,12 +24,13 @@ class HomeBtnWidget extends StatelessWidget {
             width: width,
             height: height,
             decoration: BoxDecoration(
+              backgroundBlendMode: BlendMode.colorBurn,
               color: buttonColor,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
                   blurRadius: 10,
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withOpacity(0.4),
                   offset: const Offset(0, 4)
                 )
               ]
