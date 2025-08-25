@@ -1,5 +1,5 @@
 import 'package:ama_meet/blocs/auth/auth_bloc.dart';
-import 'package:ama_meet/utils/components/snackbar.dart';
+import 'package:ama_meet/screens/components/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
