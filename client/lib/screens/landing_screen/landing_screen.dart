@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:ama_meet/screens/forms/sign_in_form.dart';
 import 'package:ama_meet/utils/components/animated_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart' as rive;
@@ -88,6 +89,14 @@ class _LandingScreenState extends State<LandingScreen> {
                     onPress: () {
                       if (!_btnClickAnimationController.isActive) {
                         _btnClickAnimationController.isActive = true;
+
+                        Future.delayed(
+                          Duration(milliseconds: 800),
+                          () {
+                            customSignInDialog(context);
+                          }
+                          );
+                        
                       }
                     },
                   ),
@@ -108,6 +117,103 @@ class _LandingScreenState extends State<LandingScreen> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Future<Object?> customSignInDialog(BuildContext context) {
+    return showGeneralDialog(
+      barrierDismissible: true, //close when tap outside
+      barrierLabel: "Sign In",
+      context: context,
+      transitionDuration: Duration(milliseconds: 400),
+
+      transitionBuilder: (_, animation, __, child) {
+        Tween<Offset> tween;
+        tween = Tween(begin: const Offset(0, -1), end: Offset.zero);
+        return SlideTransition(position: tween.animate(
+          CurvedAnimation(parent: animation, curve: Curves.easeInOut)
+        ),
+        child: child,
+        );
+      },
+
+      pageBuilder: (context, _, __) => Center(
+        child: Container(
+          height: 560,
+          margin: EdgeInsets.symmetric(horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+          decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.94),
+              borderRadius: BorderRadius.all(Radius.circular(40))),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "Sign In",
+                      style: TextStyle(
+                          fontSize: 34,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w700),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Text(
+                        "Sign in to stay connected with your classes and resources",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SignInForm(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Divider(),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            "Don't Have An Account?",
+                            style: TextStyle(color: Colors.black26),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 8, right: 8),
+                      child: Text(
+                        "Need an account? Please contact your teacher to receive your login details.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                // Still use barrierDismissible = true to close the dialog
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: -50,
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.close, color: Colors.black,),
+                  ), 
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
