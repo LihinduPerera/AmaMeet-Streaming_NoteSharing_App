@@ -25,8 +25,13 @@ class _PageSelectionState extends State<PageSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[_page],
-      bottomNavigationBar: StylishBottomBar(
+  body: pages[_page],
+  bottomNavigationBar: SizedBox(
+    height: 80,
+    child: Center(
+      child: StylishBottomBar(
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+        backgroundColor: const Color(0xFF252525),
         option: BubbleBarOptions(
           barStyle: BubbleBarStyle.horizontal,
           bubbleFillStyle: BubbleFillStyle.fill,
@@ -37,39 +42,36 @@ class _PageSelectionState extends State<PageSelection> {
             _page = index;
           });
         },
-        // iconSpace: 12.0,
         items: [
           BottomBarItem(
-            icon: const Icon(Icons.linked_camera_outlined, color: Colors.black54,),
-            selectedIcon: const Icon(Icons.linked_camera, color: Colors.white,),
-            title: const Text('Live Class',style: TextStyle(color: Colors.white),),
-            backgroundColor: buttonColor,
-      
-            // selectedColor: Colors.pink,
-            // badge: const Text('1+'),
-            // badgeColor: Colors.red,
-            // showBadge: true,
-          ),
-          BottomBarItem(
-            icon: const Icon(Icons.note_alt_outlined, color: Colors.black54,),
-            selectedIcon: const Icon(Icons.note_alt, color: Colors.white,),
-            title: const Text('Notes',style: TextStyle(color: Colors.white)),
+            icon: const Icon(Icons.linked_camera_outlined, color: Colors.black54),
+            selectedIcon: const Icon(Icons.linked_camera, color: Colors.white),
+            title: const Text('Live Class', style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.person_outline,color: Colors.black54,),
-            selectedIcon: const Icon(Icons.person, color: Colors.white,),
-            title: const Text('Account',style: TextStyle(color: Colors.white)),
+            icon: const Icon(Icons.note_alt_outlined, color: Colors.black54),
+            selectedIcon: const Icon(Icons.note_alt, color: Colors.white),
+            title: const Text('Notes', style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.settings, color: Colors.black54,),
-            selectedIcon: const Icon(Icons.person, color: Colors.white,),
-            title: const Text('Settings',style: TextStyle(color: Colors.white)),
+            icon: const Icon(Icons.person_outline, color: Colors.black54),
+            selectedIcon: const Icon(Icons.person, color: Colors.white),
+            title: const Text('Account', style: TextStyle(color: Colors.white)),
+            backgroundColor: buttonColor,
+          ),
+          BottomBarItem(
+            icon: const Icon(Icons.settings, color: Colors.black54),
+            selectedIcon: const Icon(Icons.settings, color: Colors.white),
+            title: const Text('Settings', style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
         ],
       ),
-    );
+    ),
+  ),
+);
+
   }
 }

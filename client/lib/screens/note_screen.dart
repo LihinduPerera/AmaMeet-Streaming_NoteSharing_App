@@ -41,7 +41,6 @@ class _NoteScreenState extends State<NoteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Class Notes"),
         centerTitle: true,

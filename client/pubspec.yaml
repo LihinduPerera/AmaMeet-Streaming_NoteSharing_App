@@ -54,7 +54,6 @@ dependencies:
   rive: ^0.13.20
   flutter_svg: ^2.2.0
   another_flushbar: ^1.12.30
-  blurrycontainer: ^2.1.0
 
 dev_dependencies:
   flutter_test:
