@@ -1,10 +1,12 @@
+import 'dart:ui';
+
 import 'package:ama_meet/blocs/note/note_bloc.dart';
 import 'package:ama_meet/models/note_model.dart';
 import 'package:ama_meet/screens/media_screens/pdf_viewer_screen.dart';
-import 'package:ama_meet/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ama_meet/blocs/auth/auth_bloc.dart';
+import 'package:rive/rive.dart' as rive;
 
 class NoteScreen extends StatefulWidget {
   const NoteScreen({super.key});
@@ -39,12 +41,11 @@ class _NoteScreenState extends State<NoteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFeeedf2),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Class Notes"),
         centerTitle: true,
-        backgroundColor: buttonColor,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
       ),
       body: BlocBuilder<NoteBloc, NoteState>(
         builder: (context, state) {
@@ -66,48 +67,69 @@ class _NoteScreenState extends State<NoteScreen> {
 
             final grouped = _groupNotesBySection(state.notes);
 
-            return ListView(
-              padding: const EdgeInsets.all(12),
-              children: grouped.entries.map((entry) {
-                final section = entry.key;
-                final notes = entry.value;
-
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ExpansionTile(
-                    title: Text(
-                      section,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+            return RepaintBoundary(
+              child: Stack(
+                children: [
+                  RepaintBoundary(
+                    child: rive.RiveAnimation.asset(
+                      "assets/rive/note_page.riv",
+                      fit: BoxFit.cover, // Ensure proper fitting
                     ),
-                    children: notes.map((note) {
-                      return ListTile(
-                        leading: const Icon(Icons.picture_as_pdf,
-                            color: Colors.red),
-                        title: Text(note.filename),
-                        subtitle: Text(
-                          "Uploaded at: ${DateTime.fromMillisecondsSinceEpoch(note.uploadedAt).toLocal()}",
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => PdfViewerScreen(note: note),
-                            ),
-                          );
-                        },
-                      );
-                    }).toList(),
                   ),
-                );
-              }).toList(),
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                      child: const SizedBox(),
+                    ),
+                  ),
+                  SafeArea(
+                    child: ListView(
+                      padding: const EdgeInsets.all(12),
+                      children: grouped.entries.map((entry) {
+                        final section = entry.key;
+                        final notes = entry.value;
+
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ExpansionTile(
+                            title: Text(
+                              section,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            children: notes.map((note) {
+                              return ListTile(
+                                leading: const Icon(Icons.picture_as_pdf,
+                                    color: Colors.red),
+                                title: Text(note.filename),
+                                subtitle: Text(
+                                  "Uploaded at: ${DateTime.fromMillisecondsSinceEpoch(note.uploadedAt).toLocal()}",
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          PdfViewerScreen(note: note),
+                                    ),
+                                  );
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
             );
           }
 

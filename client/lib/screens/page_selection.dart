@@ -1,5 +1,4 @@
 import 'package:ama_meet/screens/account_screen.dart';
-import 'package:ama_meet/screens/landing_screen/landing_screen.dart';
 import 'package:ama_meet/screens/meeting_screen.dart';
 import 'package:ama_meet/screens/note_screen.dart';
 import 'package:ama_meet/utils/colors.dart';
@@ -26,13 +25,11 @@ class _PageSelectionState extends State<PageSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFeeedf2),
       body: pages[_page],
       bottomNavigationBar: StylishBottomBar(
         option: BubbleBarOptions(
           barStyle: BubbleBarStyle.horizontal,
           bubbleFillStyle: BubbleFillStyle.fill,
-          opacity: 0.3,
         ),
         currentIndex: _page,
         onTap: (index) {
@@ -43,32 +40,32 @@ class _PageSelectionState extends State<PageSelection> {
         // iconSpace: 12.0,
         items: [
           BottomBarItem(
-            icon: const Icon(Icons.linked_camera_outlined),
-            selectedIcon: const Icon(Icons.linked_camera),
-            title: const Text('Live Class'),
+            icon: const Icon(Icons.linked_camera_outlined, color: Colors.black54,),
+            selectedIcon: const Icon(Icons.linked_camera, color: Colors.white,),
+            title: const Text('Live Class',style: TextStyle(color: Colors.white),),
             backgroundColor: buttonColor,
-
+      
             // selectedColor: Colors.pink,
             // badge: const Text('1+'),
             // badgeColor: Colors.red,
             // showBadge: true,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.note_alt_outlined),
-            selectedIcon: const Icon(Icons.note_alt),
-            title: const Text('Notes'),
+            icon: const Icon(Icons.note_alt_outlined, color: Colors.black54,),
+            selectedIcon: const Icon(Icons.note_alt, color: Colors.white,),
+            title: const Text('Notes',style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
-            title: const Text('Account'),
+            icon: const Icon(Icons.person_outline,color: Colors.black54,),
+            selectedIcon: const Icon(Icons.person, color: Colors.white,),
+            title: const Text('Account',style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
-            title: const Text('Account'),
+            icon: const Icon(Icons.settings, color: Colors.black54,),
+            selectedIcon: const Icon(Icons.person, color: Colors.white,),
+            title: const Text('Settings',style: TextStyle(color: Colors.white)),
             backgroundColor: buttonColor,
           ),
         ],

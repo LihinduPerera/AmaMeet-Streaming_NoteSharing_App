@@ -72,7 +72,7 @@ class HomeBtnWidget extends StatelessWidget {
           Text(
             btnText,
             style: const TextStyle(
-              color: Colors.grey,
+              color: Colors.black54,
               fontSize: 10,
             ),
           ),
