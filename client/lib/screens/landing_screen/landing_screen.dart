@@ -49,6 +49,7 @@ class _LandingScreenState extends State<LandingScreen>
     super.didChangeDependencies();
     // Use addPostFrameCallback to avoid blocking the UI
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return; 
       precacheImage(const AssetImage("assets/backgrounds/spline.png"), context);
     });
   }
@@ -246,7 +247,8 @@ class _LandingScreenState extends State<LandingScreen>
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.94),
+            // color: Colors.white.withOpacity(0.94),
+            color: Colors.white,
             borderRadius: const BorderRadius.all(Radius.circular(40)),
           ),
           child: Scaffold(

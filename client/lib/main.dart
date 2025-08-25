@@ -2,7 +2,6 @@ import 'package:ama_meet/blocs/note/note_bloc.dart';
 import 'package:ama_meet/repositories/auth_repository.dart';
 import 'package:ama_meet/repositories/note_repository.dart';
 import 'package:ama_meet/screens/landing_screen/landing_screen.dart';
-import 'package:ama_meet/screens/login_screen.dart';
 import 'package:ama_meet/screens/page_selection.dart';
 import 'package:ama_meet/utils/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -44,7 +43,7 @@ class MyApp extends StatelessWidget {
           ),
           home: const AuthWrapper(),
           routes: {
-            '/login': (context) => const LoginScreen(),
+            '/landingScreen': (context) => const LandingScreen(),
             '/pageSelection': (context) => const PageSelection(),
           },
         ),
@@ -77,10 +76,9 @@ class AuthWrapper extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (state is AuthAuthenticated) {
-            // return const PageSelection();
-            return const LandingScreen();
+            return const PageSelection();
           } else {
-            return const LoginScreen();
+            return const LandingScreen();
           }
         },
       ),

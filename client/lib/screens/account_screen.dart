@@ -33,8 +33,11 @@ class AccountScreen extends StatelessWidget {
                         radius: 50,
                         backgroundColor: Colors.grey[400],
                         child: Text(
-                          student.name.isNotEmpty ? student.name[0].toUpperCase() : '?',
-                          style: const TextStyle(fontSize: 40, color: Colors.white),
+                          student.name.isNotEmpty
+                              ? student.name[0].toUpperCase()
+                              : '?',
+                          style: const TextStyle(
+                              fontSize: 40, color: Colors.white),
                         ),
                       ),
                     ),
@@ -49,8 +52,11 @@ class AccountScreen extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: () {
                           context.read<AuthBloc>().add(LogoutRequested());
-                          Navigator.of(context)
-                              .pushReplacementNamed('/login');
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            '/landingScreen',
+                            (route) => false,
+                          );
                         },
                         icon: const Icon(Icons.logout, color: Colors.white),
                         label: const Text(
