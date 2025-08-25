@@ -10,10 +10,12 @@ class MeetingScreen extends StatelessWidget {
     final JitsiMeetController _jmc = JitsiMeetController();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFeeedf2),
+      // backgroundColor: const Color(0xFFeeedf2),
+      backgroundColor: Colors.white,
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFFeeedf2),
+        // backgroundColor: const Color(0xFFeeedf2),
+        backgroundColor: Colors.white,
         elevation: 0,
         title: const Text("Join to the Class"),
         centerTitle: true,
